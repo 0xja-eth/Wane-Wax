@@ -1,0 +1,43 @@
+﻿
+using UnityEngine;
+
+using Core.Data;
+
+/// <summary>
+/// 玩家模块
+/// </summary>
+namespace PlayerModule {
+	
+	/// <summary>
+	/// 配置
+	/// </summary>
+	public static class PlayerConfig {
+
+		/// <summary>
+		/// 存档数量
+		/// </summary>
+		public const int MaxSaveCount = 1;
+
+	}
+}
+
+/// <summary>
+/// 玩家模块数据
+/// </summary>
+namespace PlayerModule.Data {
+
+	using InfoModule.Data;
+
+	/// <summary>
+	/// 玩家数据（在这里添加自定义属性）
+	/// </summary>
+	public partial class Player {
+
+		/// <summary>
+		/// InfoModule
+		/// </summary>
+		[AutoConvert]
+		public Info info { get; protected set; } = new Info();
+		
+	}
+}

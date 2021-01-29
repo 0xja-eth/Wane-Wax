@@ -1,0 +1,48 @@
+﻿using System;
+using System.Collections.Generic;
+
+using AssetModule.Services;
+
+namespace ItemModule {
+
+	/// <summary>
+	/// 物品配置
+	/// </summary>
+	public static class ItemConfig {
+
+		/// <summary>
+		/// 图标资源
+		/// </summary>
+		public static readonly AssetSetting Icon =
+			new AssetSetting(AssetService.SystemPath, "IconSet");
+
+	}
+
+	/// <summary>
+	/// 物品类型
+	/// </summary>
+	public partial class ItemType {
+		public static int
+			Unset = 0  // 未设置
+		;
+	}
+
+	/// <summary>
+	/// 容器项类型
+	/// </summary>
+	public partial class ContainerType {
+		public static int
+			Unset = 0  // 未设置
+		;
+	}
+
+	/// <summary>
+	/// 容器项类型
+	/// </summary>
+	public partial class ContItemType {
+		public static int
+			Unset = 0  // 未设置
+		;
+	}
+
+}
