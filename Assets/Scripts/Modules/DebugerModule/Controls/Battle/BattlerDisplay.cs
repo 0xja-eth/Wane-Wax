@@ -123,6 +123,8 @@ namespace DebugerModule.Controls {
 			var rx = item.realX + 0.5f - mapX / 2;
 			var ry = item.realY - mapY / 2;
 
+			if (item.isEnemy) ry += 1;
+
 			var pos = transform.position;
 			pos.x = rx; pos.y = ry;
 
@@ -210,7 +212,8 @@ namespace DebugerModule.Controls {
 		/// </summary>
 		/// <param name="item"></param>
 		void drawDirection(RuntimeBattler item) {
-			sprite.flipX = item.direction;
+			if (item.isActor) sprite.flipX = item.direction;
+			if (item.isEnemy) sprite.flipX = !item.direction;
 		}
 
 		#endregion

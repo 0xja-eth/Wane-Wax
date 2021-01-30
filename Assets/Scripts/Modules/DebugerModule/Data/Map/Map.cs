@@ -256,6 +256,10 @@ namespace DebugerModule.Data {
 				}
 				return wy - y + 1;
 			} else {
+				// 查看头顶
+				grid = getGridLoopX(x - 1, y + 2);
+				if (grid.belong != belong) return 2;
+
 				// 向上试探
 				grid = getGridLoopX(x, y + 1);
 				if (grid.belong != belong) return 2;
@@ -279,11 +283,15 @@ namespace DebugerModule.Data {
 
 				// 向下试探
 				while (grid.belong == belong) {
-					if (++wy < 0) return -mapY;
+					if (++wy >= mapY) return -mapY;
 					grid = getGridLoopX(x, wy);
 				}
 				return y - wy + 1;
 			} else {
+				// 查看头顶
+				grid = getGridLoopX(x - 1, y - 2);
+				if (grid.belong != belong) return 2;
+
 				// 向上试探
 				grid = getGridLoopX(x, y - 1);
 				if (grid.belong != belong) return 2;
@@ -339,7 +347,7 @@ namespace DebugerModule.Data {
 		/// 更新战斗者状态
 		/// </summary>
 		void updateBattlers() {
-			foreach (var battler in battlers) battler.update();
+			foreach (var battler in battlers) battler?.update();
 		}
 
 		/// <summary>

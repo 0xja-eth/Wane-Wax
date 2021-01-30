@@ -20,18 +20,13 @@ namespace DebugerModule.Data {
 		/// </summary>
 		public static readonly Grids[] GridsSet = new Grids[] {
 			// 长条形
-			new Grids("11"), new Grids("111"), new Grids("1111"),
+			new Grids("1"), new Grids("11"), new Grids("111"),
 
 			// 7字形
-			new Grids("100\n111"), new Grids("010\n111"), new Grids("001\n111"),
+			new Grids("01\n11"), new Grids("010\n111"), new Grids("001\n111"),
 
 			// 矩形
-			new Grids("11\n11"), new Grids("111\n111\n111"),
-
-			// 阶梯形
-			new Grids("01\n11"), new Grids("001\n011\n110"),
-			new Grids("011\n110"), new Grids("010\n111\n101"),
-
+			new Grids("11\n11")
 		};
 
 		/// <summary>

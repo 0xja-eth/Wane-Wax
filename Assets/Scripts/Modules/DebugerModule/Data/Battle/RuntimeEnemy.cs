@@ -21,6 +21,11 @@ namespace DebugerModule.Data {
 		public override bool isEnemy => true;
 
 		/// <summary>
+		/// 下一位置
+		/// </summary>
+		public override int nextY => y - nextWall; // wall 大于 2 会修改direction
+
+		/// <summary>
 		/// 初始位置
 		/// </summary>
 		public override Vector2 initPos => new Vector2(mapX / 2, mapY / 2 - 1);

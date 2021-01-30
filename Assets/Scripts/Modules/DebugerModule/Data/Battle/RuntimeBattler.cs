@@ -36,7 +36,7 @@ namespace DebugerModule.Data {
 		[AutoConvert]
 		public float frequency { get; protected set; } = 0f; // 移动频率 s/次
 		[AutoConvert]
-		public float speed { get; protected set; } = 0.5f; // 移动速度 m/s
+		public float speed { get; protected set; } = 1f; // 移动速度 m/s
 
 		/// <summary>
 		/// 地图尺寸
@@ -48,7 +48,7 @@ namespace DebugerModule.Data {
 		/// 下一个坐标
 		/// </summary>
 		public int nextX => (mapX + (direction ? x + 1 : x - 1)) % map.mapX;
-		public int nextY => y + nextWall; // wall 大于 2 会修改direction
+		public virtual int nextY => y + nextWall; // wall 大于 2 会修改direction
 
 		/// <summary>
 		/// 下一个坐标墙高度
@@ -56,7 +56,7 @@ namespace DebugerModule.Data {
 		int _nextWall = 999;
 		public int nextWall {
 			get {
-				if (_nextWall == 999)
+				if (_nextWall > 2)
 					_nextWall = map.judgeWall(nextX, y, belong);
 				return _nextWall;
 			}
@@ -149,6 +149,7 @@ namespace DebugerModule.Data {
 			// wall >= 2
 			else if (backWall) return State.Panic;
 			else { 
+				_nextWall = 999; // 重置 nextWall
 				direction = !direction;
 				return getMoveState(true);
 			}
@@ -172,10 +173,9 @@ namespace DebugerModule.Data {
 		/// 停止
 		/// </summary>
 		public void stop() {
-			runTime = 0;
-			_nextWall = 999;
-			realX = x = targetX;
-			realY = y = targetY;
+			runTime = 0; _nextWall = 999;
+
+			realX = x = targetX; realY = y = targetY;
 
 			changeState(State.Idle);
 		}
@@ -206,7 +206,12 @@ namespace DebugerModule.Data {
 		/// 更新下落
 		/// </summary>
 		protected virtual void updateMoving() {
+			Debug.Log("update" + state + ": " + runTime + "\nreal: " + realX + ", " + realY +
+				", target: " + targetX + ", " + targetY + ", coord: " + x + ", " + y);
+
 			runTime += Time.deltaTime;
+			var speed = direction ? this.speed : -this.speed;
+
 			if (runTime >= moveFT) stop();
 			else realX += speed * Time.deltaTime;
 
@@ -223,7 +228,10 @@ namespace DebugerModule.Data {
 		/// 更新待命
 		/// </summary>
 		protected override void _updateIdle() {
-			realX = x;
+			Debug.Log("updateIdle: " + idleTime + "\nreal: " + realX + ", " + realY + 
+				", target: " + targetX + ", " + targetY + ", coord: " + x + ", " + y);
+
+			realX = x; realY = y;
 			idleTime += Time.deltaTime;
 			if (idleTime >= frequency) move();
 		}

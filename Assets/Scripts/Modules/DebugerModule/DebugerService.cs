@@ -26,6 +26,8 @@ namespace DebugerModule.Services {
 		public RuntimeGrids currentGrids;
 		public RuntimeGrids nextGrids;
 
+		public RuntimeGrids enemyGrids;
+
 		/// <summary>
 		/// 状态
 		/// </summary>
@@ -121,7 +123,7 @@ namespace DebugerModule.Services {
 		/// </summary>
 		protected override void updateOthers() {
 			base.updateOthers();
-			updateMap();
+			updateMap(); updateEnemy();
 		}
 
 		/// <summary>
@@ -130,7 +132,27 @@ namespace DebugerModule.Services {
 		void updateMap() {
 			currentMap.update();
 		}
-		
+
+		// TODO: 封装 AI 模块
+		float placeTime = 0;
+		public float speed { get; protected set; } = 2; // 放置速度 s/个
+
+		/// <summary>
+		/// 更新敌人
+		/// </summary>
+		void updateEnemy() {
+			if (enemyGrids == null) enemyGrids = generateGrids(Grid.Belong.Enemy);
+
+			placeGrids(enemyGrids, currentMap.actor.x, true);
+
+			placeTime += Time.deltaTime;
+			if (placeTime >= speed) {
+				placeGrids(enemyGrids, currentMap.actor.x);
+				enemyGrids = null;
+				placeTime = 0;
+			}
+		}
+
 		/// <summary>
 		/// 更新输入
 		/// </summary>
