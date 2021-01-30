@@ -49,6 +49,11 @@ namespace DebugerModule.Data {
 			x = Mathf.Clamp(x, 0, mapX - 1);
 			return getGrid(x, y);
 		}
+		public Grid getGridLoopX(int x, int y) {
+			x = (mapX + x) % mapX;
+			y = Mathf.Clamp(y, 0, mapY - 1);
+			return getGrid(x, y);
+		}
 		public Grid setGrid(int x, int y, Grid grid = null) {
 			if (!isValidCoord(x, y)) return null;
 			return grids[index(x, y)] = grid ?? new Grid(x, y, this);
@@ -74,6 +79,28 @@ namespace DebugerModule.Data {
 		/// </summary>
 		public bool isValidCoord(int x, int y) {
 			return x >= 0 && x < mapX && y >= 0 && y < mapY;
+		}
+
+		/// <summary>
+		/// 判断前方墙的高度
+		/// </summary>
+		public int judgeWall(int x, int y, Grid.Belong belong) {
+			var wy = y;
+			var grid = getGridLoopX(x, y);
+			if (grid.belong == belong) // 空气
+				// 向下试探
+				while (grid.belong == belong) {
+					if (--wy < 0) return -mapY;
+					grid = getGridLoopX(x, wy);
+				}
+			else 
+				// 向上试探
+				while (grid.belong != belong) {
+					if (++wy >= mapY) return mapY;
+					grid = getGridLoopX(x, wy);
+				}
+
+			return wy - y;
 		}
 
 		/// <summary>

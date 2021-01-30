@@ -13,11 +13,8 @@ namespace BattleModule {
 		/// <summary>
 		/// 属性数量
 		/// </summary>
-		// ExerPro Override
-		//public const int ParamsCount = 1;
+		public const int ParamsCount = 1;
 
-		public const int ParamsCount = 4;
-		// ExerPro Override End
 		public const int INF = 999999999; // 小于 1<<31
 
 		/// <summary>
@@ -25,50 +22,24 @@ namespace BattleModule {
 		/// </summary>
 		public const int MHPParamId = 0;
 
-		// ExerPro Override
-		public const int PowerParamId = 1;
-		public const int DefenseParamId = 2;
-		public const int AgileParamId = 3;
-		// ExerPro Override End
-
-		// ExerPro Override
-		///// <summary>
-		///// 默认属性
-		///// </summary>
-		//public static readonly double[] DefaultParams =
-		//	new double[ParamsCount] { 100 };
-
-		///// <summary>
-		///// 最大属性
-		///// </summary>
-		//public static readonly double[] MaxParams =
-		//	new double[ParamsCount] { INF };
-
-		///// <summary>
-		///// 最小属性
-		///// </summary>
-		//public static readonly double[] MinParams =
-		//	new double[ParamsCount] { 1 };
-
 		/// <summary>
 		/// 默认属性
 		/// </summary>
 		public static readonly double[] DefaultParams =
-			new double[ParamsCount] { 100, 5, 0, 0 };
+			new double[ParamsCount] { 100 };
 
 		/// <summary>
 		/// 最大属性
 		/// </summary>
 		public static readonly double[] MaxParams =
-			new double[ParamsCount] { INF, INF, INF, INF};
+			new double[ParamsCount] { INF };
 
 		/// <summary>
 		/// 最小属性
 		/// </summary>
 		public static readonly double[] MinParams =
-			new double[ParamsCount] { 1, 0, 0, 0 };
+			new double[ParamsCount] { 1 };
 
-		// ExerPro Override End
 	}
 
 	/// <summary>
@@ -80,7 +51,7 @@ namespace BattleModule {
 
 			Idle, // 待机
 			Thinking, // 思考中
-			
+
 			Moving, // 移动中
 			Acting, // 行动中
 

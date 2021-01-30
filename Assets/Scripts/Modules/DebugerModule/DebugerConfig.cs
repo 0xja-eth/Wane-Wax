@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
+using AssetModule.Services;
 
 namespace DebugerModule {
 
@@ -10,6 +9,12 @@ namespace DebugerModule {
 	/// 配置
 	/// </summary>
 	public class DebugerConfig {
+
+		/// <summary>
+		/// 战斗者资源
+		/// </summary>
+		public static readonly AssetSetting Battler =
+			new AssetSetting("Battler", "Battler_{0}");
 
 		/// <summary>
 		/// 地图尺寸
