@@ -13,18 +13,19 @@ namespace DebugerModule.Components {
 	/// 地图显示
 	/// </summary>
 	[RequireComponent(typeof(GridContainer))]
-	[RequireComponent(typeof(LineRenderer))]
+	[RequireComponent(typeof(MapLineContainer))]
 	public class MapDisplay : ItemDisplay<Map> {
 
 		/// <summary>
 		/// 线段
 		/// </summary>
-		public struct Line {
+		public class Line {
 
 			/// <summary>
 			/// 两点
 			/// </summary>
 			public Vector2 p1, p2;
+			public bool flag = false;
 
 			/// <summary>
 			/// 另一个点
@@ -49,6 +50,11 @@ namespace DebugerModule.Components {
 				if (p2 == l.p2) return p2;
 				return null;
 			}
+			public Vector2? interact(Vector2 p) {
+				if (p1 == p) return p1;
+				if (p2 == p) return p2;
+				return null;
+			}
 
 			/// <summary>
 			/// 构造函数
@@ -64,7 +70,7 @@ namespace DebugerModule.Components {
 		[RequireTarget]
 		protected GridContainer gridContainer;
 		[RequireTarget]
-		protected LineRenderer lineRenderer;
+		protected MapLineContainer linesContainer;
 
 		/// <summary>
 		/// 地图尺寸
@@ -76,7 +82,7 @@ namespace DebugerModule.Components {
 		/// 线段数据
 		/// </summary>
 		List<Line> rawLines = new List<Line>();
-		List<Line> drawingLines = new List<Line>();
+		List<List<Line>> paintableLines = new List<List<Line>>();
 
 		#region 数据
 
@@ -85,9 +91,10 @@ namespace DebugerModule.Components {
 		/// </summary>
 		protected override void onItemChanged() {
 			base.onItemChanged();
-			gridContainer.setItems(item.grids);
-
 			generateLines();
+
+			gridContainer.setItems(item?.grids);
+			linesContainer.setItems(paintableLines);
 		}
 
 		/// <summary>
@@ -95,15 +102,81 @@ namespace DebugerModule.Components {
 		/// </summary>
 		void generateLines() {
 			clearLines();
+			generateRawLines();
+			makePaintableLines();
+		}
 
-			var lastGrid = new Grid(Grid.Belong.Enemy);
+		/// <summary>
+		/// 生成原始分离线段
+		/// </summary>
+		void generateRawLines() {
+			Grid lastGrid;
 
-			for (int y = 0; y < mapY; ++y)
+			// 由下至上扫描
+			for (int x = 0; x < mapX; ++x) {
+				lastGrid = new Grid(Grid.Belong.Enemy);
+				for (int y = 0; y < mapY; ++y) {
+					var grid = item.getGrid(x, y);
+					if (grid.belong != lastGrid.belong) {
+						var p1 = grid.point(Grid.Direction.LD);
+						var p2 = grid.point(Grid.Direction.RD);
+						rawLines.Add(new Line(p1, p2));
+					}
+				}
+			}
+
+			// 由左至右扫描
+			for (int y = 0; y < mapY; ++y) {
+				lastGrid = new Grid(y, 0);
 				for (int x = 0; x < mapX; ++x) {
 					var grid = item.getGrid(x, y);
-					if (lastGrid.belong != grid.belong)
-						; // TODO: 获取边界线
+					if (grid.belong != lastGrid.belong) {
+						var p1 = grid.point(Grid.Direction.LD);
+						var p2 = grid.point(Grid.Direction.LU);
+						rawLines.Add(new Line(p1, p2));
+					}
 				}
+			}
+		}
+
+		/// <summary>
+		/// 生成可绘制的连续线段
+		/// </summary>
+		void makePaintableLines() {
+			// 从中点扫描
+			makePaintableLines(new Vector2(0, mapY >> 1));
+
+			// 扫描剩余线条
+			foreach (var line in rawLines) {
+				if (line.flag) continue; // 遍历过
+				makePaintableLines(line.p1);
+			}
+		}
+		void makePaintableLines(Vector2 point) {
+			var lines = new List<Line>();
+
+			makePaintableLines(lines, point);
+
+			paintableLines.Add(lines);
+		}
+		void makePaintableLines(List<Line> lines, Vector2 point) {
+			if (point.x >= mapX - 1) return;
+
+			Vector2 point2 = point;
+			foreach (var line in rawLines) {
+				if (line.flag) continue; // 遍历过
+
+				var op = line.other(point);
+				if (op == null) continue;
+				point2 = (Vector2)op;
+
+				line.flag = true;
+				lines.Add(new Line(point, point2));
+				break;
+			}
+			if (point2 == point) return;
+
+			makePaintableLines(lines, point2);
 		}
 
 		/// <summary>
@@ -111,7 +184,7 @@ namespace DebugerModule.Components {
 		/// </summary>
 		void clearLines() {
 			rawLines.Clear();
-			drawingLines.Clear();
+			paintableLines.Clear();
 		}
 
 		#endregion
@@ -125,14 +198,7 @@ namespace DebugerModule.Components {
 		protected override void drawExactlyItem(Map item) {
 			base.drawExactlyItem(item);
 		}
-
-		/// <summary>
-		/// 绘制线段
-		/// </summary>
-		void drawLines() {
-
-		}
-
+		
 		#endregion
 	}
 }

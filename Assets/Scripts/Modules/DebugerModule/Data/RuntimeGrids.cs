@@ -59,7 +59,7 @@ namespace DebugerModule.Data {
 					var grids = realGrids;
 					_rootGrid = grids[0]; // 默认
 					foreach (var grid in grids)
-						if (grid.x < _rootGrid.x) _rootGrid = grid;
+						if (grid.x <= _rootGrid.x) _rootGrid = grid;
 				}
 				return _rootGrid;
 			}

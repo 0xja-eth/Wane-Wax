@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 
+using UnityEngine;
+
 using Core.Data;
 
 namespace DebugerModule.Data {
@@ -22,6 +24,13 @@ namespace DebugerModule.Data {
 		/// </summary>
 		public enum Belong {
 			None, Player, Enemy
+		}
+
+		/// <summary>
+		/// 方向
+		/// </summary>
+		public enum Direction {
+			LU, RU, RD, LD, Center
 		}
 
 		/// <summary>
@@ -104,6 +113,24 @@ namespace DebugerModule.Data {
 		public void changeBelong(Belong belong) {
 			this.belong = belong;
 			_refreshRequest = true;
+		}
+
+		/// <summary>
+		/// 获取边界点
+		/// </summary>
+		public Vector2 point(Direction dir) {
+			switch(dir) {
+				case Direction.LU:
+					return new Vector2(x - 0.5f, y + 0.5f);
+				case Direction.RU:
+					return new Vector2(x + 0.5f, y + 0.5f);
+				case Direction.RD:
+					return new Vector2(x + 0.5f, y - 0.5f);
+				case Direction.LD:
+					return new Vector2(x - 0.5f, y - 0.5f);
+				default:
+					return new Vector2(x, y);
+			}
 		}
 
 		/// <summary>
