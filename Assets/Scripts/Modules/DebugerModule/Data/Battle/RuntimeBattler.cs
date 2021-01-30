@@ -82,6 +82,11 @@ namespace DebugerModule.Data {
 		/// </summary>
 		float idleTime = 0, runTime = 0;
 
+		/// <summary>
+		/// 目标
+		/// </summary>
+		int targetX, targetY;
+
 		#region 配置
 
 		/// <summary>
@@ -120,6 +125,8 @@ namespace DebugerModule.Data {
 
 			velocity = speed;
 			runTime = 1 / speed;
+			targetX = nextX;
+			targetY = nextY;
 
 			changeState(state);
 		}
@@ -141,11 +148,22 @@ namespace DebugerModule.Data {
 		}
 
 		/// <summary>
+		/// 同步位置
+		/// </summary>
+		/// <param name="x"></param>
+		/// <param name="y"></param>
+		public void syncPosition(float x, float y) {
+
+			this.x = Mathf.FloorToInt(x);
+			this.y = Mathf.FloorToInt(y);
+
+			if (x == targetX) stop();
+		}
+
+		/// <summary>
 		/// 停止
 		/// </summary>
 		public void stop() {
-			y = nextY; x = nextX;
-
 			idleTime = velocity = 0;
 			changeState(State.Idle);
 		}
@@ -174,6 +192,7 @@ namespace DebugerModule.Data {
 		/// </summary>
 		protected virtual void _updateRunning() {
 			updateMoving();
+			Debug.Log(this + ": " + x + "," + y);
 		}
 
 		/// <summary>

@@ -20,9 +20,15 @@ namespace DebugerModule.Controls {
 	public class BattlerDisplay : ItemDisplay<RuntimeBattler> {
 
 		/// <summary>
+		/// 外部变量设置
+		/// </summary>
+		public const int PlayerLayer = 8;
+		public const int EnemyLayer = 9;
+
+		/// <summary>
 		/// 外部变量定义
 		/// </summary>
-		public float jumpForce = 2; // 跳跃力量
+		public float jumpForce = 20; // 跳跃力量
 
 		public RuntimeAnimatorController playerAnimator, enemyAnimator;
 
@@ -43,6 +49,12 @@ namespace DebugerModule.Controls {
 		public MapDisplay mapDisplay { get; set; }
 
 		/// <summary>
+		///  属性定义
+		/// </summary>
+		public bool isActor => item?.isActor ?? false;
+		public bool isEnemy => item?.isEnemy ?? false;
+
+		/// <summary>
 		/// 内部变量定义
 		/// </summary>
 		RuntimeBattler lastItem;
@@ -59,6 +71,9 @@ namespace DebugerModule.Controls {
 			updateState();
 			updateDirection();
 			updateVelocity();
+			updatePosition();
+
+			updateGravity();
 		}
 
 		/// <summary>
@@ -89,7 +104,24 @@ namespace DebugerModule.Controls {
 		/// 跳跃
 		/// </summary>
 		void _enterJumping() {
-			rigidbody.AddForce(new Vector2(0, jumpForce));
+			var force = isEnemy ? -jumpForce : jumpForce;
+			rigidbody.AddForce(new Vector2(0, force));
+		}
+
+		/// <summary>
+		/// 更新位置
+		/// </summary>
+		void updatePosition() {
+			var pos = transform.position;
+			item.syncPosition(pos.x, pos.y);
+		}
+
+		/// <summary>
+		/// 重力
+		/// </summary>
+		void updateGravity() {
+			if (!isEnemy) return;
+			rigidbody.AddForce(new Vector2(0, 9.8f*2));
 		}
 
 		#endregion
@@ -127,10 +159,12 @@ namespace DebugerModule.Controls {
 		/// <param name="item"></param>
 		void drawBelong(RuntimeBattler item) {
 			if (item.isActor) {
+				gameObject.layer = PlayerLayer;
 				transform.localEulerAngles = new Vector3(0, 0, 0);
 				animator.animator.runtimeAnimatorController = playerAnimator;
 			}
 			if (item.isEnemy) {
+				gameObject.layer = EnemyLayer;
 				transform.localEulerAngles = new Vector3(0, 0, 180);
 				animator.animator.runtimeAnimatorController = enemyAnimator;
 			}

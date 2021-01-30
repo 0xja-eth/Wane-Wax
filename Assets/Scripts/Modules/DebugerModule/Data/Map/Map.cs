@@ -300,10 +300,10 @@ namespace DebugerModule.Data {
 			actor = new RuntimeActor(this);
 		}
 		public void addEnemy(int x, int y) {
-			battlers.Add(new RuntimeEnemy(this, x, y));
+			enemies.Add(new RuntimeEnemy(this, x, y));
 		}
 		public void addEnemy() {
-			battlers.Add(new RuntimeEnemy(this));
+			enemies.Add(new RuntimeEnemy(this));
 		}
 
 		#endregion
