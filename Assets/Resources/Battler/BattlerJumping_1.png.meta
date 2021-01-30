@@ -1,31 +1,64 @@
 fileFormatVersion: 2
-guid: 869d55aa4ccd6c4458ab398b591b73b7
+guid: 11227cd30b3a0054b8fd92fcf6fb59f9
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -6869311736658353210
-    second: BattlerRuning_1_0
+      213: -2580840049443024139
+    second: BattlerJumping_1_0
   - first:
-      213: -4110198126243413455
-    second: BattlerRuning_1_1
+      213: -5708732855002999905
+    second: BattlerJumping_1_1
   - first:
-      213: -564124206716578749
-    second: BattlerRuning_1_2
+      213: -5734641178020816989
+    second: BattlerJumping_1_2
   - first:
-      213: -7384352510192589798
-    second: BattlerRuning_1_3
+      213: -3388828103432908782
+    second: BattlerJumping_1_3
   - first:
-      213: -2776047145926171031
-    second: BattlerRuning_1_4
+      213: 2276863989040625616
+    second: BattlerJumping_1_4
   - first:
-      213: -1115846813267020018
-    second: BattlerRuning_1_5
+      213: 1596534302988085520
+    second: BattlerJumping_1_5
   - first:
-      213: 4664020585382356148
-    second: BattlerRuning_1_6
+      213: 795659081800845700
+    second: BattlerJumping_1_6
   - first:
-      213: 7714445528197280293
-    second: BattlerRuning_1_7
+      213: 8431625978221000165
+    second: BattlerJumping_1_7
+  - first:
+      213: -5304534636143308996
+    second: BattlerJumping_1_8
+  - first:
+      213: 2590812634135913514
+    second: BattlerJumping_1_9
+  - first:
+      213: 2919673580102673601
+    second: BattlerJumping_1_0
+  - first:
+      213: -6889276609919732967
+    second: BattlerJumping_1_1
+  - first:
+      213: -4777448933801357217
+    second: BattlerJumping_1_3
+  - first:
+      213: -270644223187826256
+    second: BattlerJumping_1_4
+  - first:
+      213: -362382060130726864
+    second: BattlerJumping_1_5
+  - first:
+      213: -4966266962965733367
+    second: BattlerJumping_1_6
+  - first:
+      213: 7020666652893101689
+    second: BattlerJumping_1_7
+  - first:
+      213: 2965344066199053299
+    second: BattlerJumping_1_8
+  - first:
+      213: -7898977715595477794
+    second: BattlerJumping_1_9
   externalObjects: {}
   serializedVersion: 10
   mipmaps:
@@ -146,13 +179,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: BattlerRuning_1_0
+      name: BattlerJumping_1_0
       rect:
         serializedVersion: 2
-        x: 340
-        y: 133
-        width: 245
-        height: 375
+        x: 1185
+        y: 568
+        width: 177
+        height: 497
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -160,20 +193,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 6c3ae05ee5d4ba0a0800000000000000
-      internalID: -6869311736658353210
+      spriteID: 1c4ec1ae6a3c48820800000000000000
+      internalID: 2919673580102673601
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: BattlerRuning_1_1
+      name: BattlerJumping_1_3
       rect:
         serializedVersion: 2
-        x: 705
-        y: 131
-        width: 223
-        height: 370
+        x: 456
+        y: 568
+        width: 186
+        height: 344
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -181,20 +214,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 13209c8b494a5f6c0800000000000000
-      internalID: -4110198126243413455
+      spriteID: f509338b18713bdb0800000000000000
+      internalID: -4777448933801357217
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: BattlerRuning_1_2
+      name: BattlerJumping_1_4
       rect:
         serializedVersion: 2
-        x: 1116
-        y: 131
-        width: 142
-        height: 368
+        x: 824
+        y: 568
+        width: 203
+        height: 392
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -202,20 +235,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 3449579d504db28f0800000000000000
-      internalID: -564124206716578749
+      spriteID: 0b9c060538a7e3cf0800000000000000
+      internalID: -270644223187826256
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: BattlerRuning_1_3
+      name: BattlerJumping_1_5
       rect:
         serializedVersion: 2
-        x: 1441
-        y: 136
-        width: 194
-        height: 383
+        x: 1482
+        y: 569
+        width: 264
+        height: 477
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -223,20 +256,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: a14e4b51482858990800000000000000
-      internalID: -7384352510192589798
+      spriteID: 03c0fe0bf6f88faf0800000000000000
+      internalID: -362382060130726864
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: BattlerRuning_1_4
+      name: BattlerJumping_1_6
       rect:
         serializedVersion: 2
-        x: 1770
-        y: 133
-        width: 248
-        height: 376
+        x: 456
+        y: 116
+        width: 235
+        height: 338
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -244,20 +277,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 966655334df7979d0800000000000000
-      internalID: -2776047145926171031
+      spriteID: 9006ba47286441bb0800000000000000
+      internalID: -4966266962965733367
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: BattlerRuning_1_5
+      name: BattlerJumping_1_7
       rect:
         serializedVersion: 2
-        x: 2193
-        y: 130
+        x: 815
+        y: 116
         width: 221
-        height: 362
+        height: 304
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -265,20 +298,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: e07b77f3c37b380f0800000000000000
-      internalID: -1115846813267020018
+      spriteID: 97ebf1caf1b6e6160800000000000000
+      internalID: 7020666652893101689
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: BattlerRuning_1_6
+      name: BattlerJumping_1_8
       rect:
         serializedVersion: 2
-        x: 2656
-        y: 129
-        width: 140
-        height: 358
+        x: 1161
+        y: 116
+        width: 201
+        height: 396
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -286,20 +319,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 4b423d8e20ee9b040800000000000000
-      internalID: 4664020585382356148
+      spriteID: 3f36b9697b4072920800000000000000
+      internalID: 2965344066199053299
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: BattlerRuning_1_7
+      name: BattlerJumping_1_9
       rect:
         serializedVersion: 2
-        x: 2962
-        y: 131
-        width: 206
-        height: 377
+        x: 1515
+        y: 113
+        width: 199
+        height: 402
       alignment: 7
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -307,8 +340,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 522bc43c5573f0b60800000000000000
-      internalID: 7714445528197280293
+      spriteID: edc74354e91316290800000000000000
+      internalID: -7898977715595477794
       vertices: []
       indices: 
       edges: []
@@ -316,7 +349,7 @@ TextureImporter:
     outline: []
     physicsShape: []
     bones: []
-    spriteID: a823d85bf98007a4792a635de7f9443e
+    spriteID: ad539d1ffec056d4ab860a156fc30b99
     internalID: 0
     vertices: []
     indices: 

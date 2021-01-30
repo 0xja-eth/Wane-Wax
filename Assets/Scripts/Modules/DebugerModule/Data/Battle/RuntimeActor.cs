@@ -25,7 +25,7 @@ namespace DebugerModule.Data {
 		/// </summary>
 		public override Vector2 initPos => new Vector2(mapX / 2, mapY / 2);
 		public override bool initDir => true;
-
+		
 		/// <summary>
 		/// 初始化
 		/// </summary>

@@ -58,6 +58,8 @@ namespace DebugerModule.Services {
 			var mapY = DebugerConfig.MapY;
 
 			currentMap = new Map(mapX, mapY);
+			currentMap.addActor();
+			currentMap.addEnemy();
 		}
 
 		/// <summary>
@@ -133,8 +135,6 @@ namespace DebugerModule.Services {
 		/// 更新输入
 		/// </summary>
 		void updateInputting() {
-			Debug.Log("Mouse: " + mousePos);
-
 			placeGrids(currentGrids, (int)mousePos.x, 
 				!Input.GetKeyDown(KeyCode.Space));
 		}

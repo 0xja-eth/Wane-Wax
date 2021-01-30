@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 
 using UnityEngine;
+using UnityEngine.Animations;
 
 using ExerComps.Controls.AnimationExtensions;
 using ExerComps.Controls.ItemDisplays;
@@ -22,6 +23,8 @@ namespace DebugerModule.Controls {
 		/// 外部变量定义
 		/// </summary>
 		public float jumpForce = 2; // 跳跃力量
+
+		public RuntimeAnimatorController playerAnimator, enemyAnimator;
 
 		/// <summary>
 		/// 外部组件设置
@@ -123,8 +126,14 @@ namespace DebugerModule.Controls {
 		/// </summary>
 		/// <param name="item"></param>
 		void drawBelong(RuntimeBattler item) {
-			if (item.isActor) transform.localEulerAngles = new Vector3(0, 0, 0);
-			if (item.isEnemy) transform.localEulerAngles = new Vector3(0, 0, 180);
+			if (item.isActor) {
+				transform.localEulerAngles = new Vector3(0, 0, 0);
+				animator.animator.runtimeAnimatorController = playerAnimator;
+			}
+			if (item.isEnemy) {
+				transform.localEulerAngles = new Vector3(0, 0, 180);
+				animator.animator.runtimeAnimatorController = enemyAnimator;
+			}
 		}
 
 		/// <summary>

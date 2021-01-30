@@ -145,8 +145,11 @@ namespace DebugerModule.Controls {
 		/// </summary>
 		protected override void onItemChanged() {
 			base.onItemChanged();
-			gridContainer.setItems(item?.grids);
+
 			setupLines();
+
+			gridContainer.setItems(item?.grids);
+			battleground.setItems(item.battlers);
 		}
 
 		/// <summary>
@@ -155,7 +158,6 @@ namespace DebugerModule.Controls {
 		void setupLines() {
 			generateLines();
 
-			battleground.setItems(item.battlers);
 			linesContainer.setItems(paintableLines);
 		}
 

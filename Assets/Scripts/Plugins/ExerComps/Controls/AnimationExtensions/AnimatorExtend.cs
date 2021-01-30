@@ -21,7 +21,8 @@ namespace ExerComps.Controls.AnimationExtensions {
 		/// 内部组件设置
 		/// </summary>
 		[RequireTarget]
-		Animator animator; // 动画组件
+		[HideInInspector]
+		public Animator animator; // 动画组件
 
         /// <summary>
         /// 外部变量设置

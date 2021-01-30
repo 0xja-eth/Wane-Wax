@@ -75,8 +75,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 8017902908209029541, guid: e361e71622a281c45bcacddc6bba886e,
-    type: 3}
+  m_Sprite: {fileID: 255042906039289963, guid: 869d55aa4ccd6c4458ab398b591b73b7, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -104,14 +103,14 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0}
-    oldSize: {x: 0.8072917, y: 2}
+    oldSize: {x: 1.1510417, y: 1.885813}
     newSize: {x: 0.4861111, y: 1.0277778}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1, y: 2}
+  m_Size: {x: 0.6, y: 1.85}
   m_EdgeRadius: 0
 --- !u!50 &1491681888125443174
 Rigidbody2D:
@@ -144,7 +143,7 @@ Animator:
   m_GameObject: {fileID: 1491681888125443170}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 0}
+  m_Controller: {fileID: 22100000, guid: c77b4e24ae61abe438912cd4ae239993, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -166,6 +165,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   showDebug: 0
+  animator: {fileID: 0}
 --- !u!114 &1864704016849583467
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -180,3 +180,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   showDebug: 0
   jumpForce: 3
+  playerAnimator: {fileID: 9100000, guid: e0f910bc69afdaa4589d9154d95e8105, type: 2}
+  enemyAnimator: {fileID: 22100000, guid: c77b4e24ae61abe438912cd4ae239993, type: 2}

@@ -22,7 +22,20 @@ namespace DebugerModule.Data {
 		[AutoConvert]
 		public Grid[] grids { get; protected set; }
 		[AutoConvert]
-		public List<RuntimeBattler> battlers { get; protected set; }
+		public RuntimeActor actor { get; protected set; }
+		[AutoConvert]
+		public List<RuntimeEnemy> enemies { get; protected set; } = new List<RuntimeEnemy>();
+
+		/// <summary>
+		/// 战斗者
+		/// </summary>
+		public List<RuntimeBattler> battlers {
+			get {
+				var res = new List<RuntimeBattler>(enemies.Count + 1);
+				res.Add(actor); foreach (var enemy in enemies) res.Add(enemy);
+				return res;
+			}
+		}
 
 		/// <summary>
 		/// 刷新请求
@@ -218,24 +231,56 @@ namespace DebugerModule.Data {
 		/// 判断前方墙的高度
 		/// </summary>
 		public int judgeWall(int x, int y, Grid.Belong belong) {
-			var res = _judgeWall(x, y, belong);
-			return (belong == Grid.Belong.Enemy) ? -res : res;
+			switch(belong) {
+				case Grid.Belong.Player:
+					return judgePlayerWall(x, y);
+				case Grid.Belong.Enemy:
+					return judgeEnemyWall(x, y);
+			}
+			return 2;
 		}
-		int _judgeWall(int x, int y, Grid.Belong belong) {
+		int judgePlayerWall(int x, int y) {
 			var wy = y;
+			var belong = Grid.Belong.Player;
 			var grid = getGridLoopX(x, y);
-			if ((belong == Grid.Belong.Player && grid.belong == belong) ||
-				(belong == Grid.Belong.Enemy && grid.belong != belong)) // 空气
-																		// 向下试探
+			// 空气
+			if (grid.belong == belong) {
+				// 向上试探一格（防止上面还有）
+				grid = getGridLoopX(x, y + 1);
+				if (grid.belong != belong) return 2;
+
+				// 向下试探
 				while (grid.belong == belong) {
 					if (--wy < 0) return -mapY;
 					grid = getGridLoopX(x, wy);
-				} else
+				}
+			} else {
 				// 向上试探
-				while (grid.belong != belong) {
-					if (++wy >= mapY) return mapY;
+				grid = getGridLoopX(x, y + 1);
+				if (grid.belong != belong) return 2;
+			}
+			return wy - y;
+		}
+		int judgeEnemyWall(int x, int y) {
+			var wy = y;
+			var belong = Grid.Belong.Enemy;
+			var grid = getGridLoopX(x, y);
+			// 空气
+			if (grid.belong == belong) {
+				// 向上试探一格（防止上面还有）
+				grid = getGridLoopX(x, y - 1);
+				if (grid.belong != belong) return 2;
+
+				// 向下试探
+				while (grid.belong == belong) {
+					if (++wy < 0) return -mapY;
 					grid = getGridLoopX(x, wy);
 				}
+			} else {
+				// 向上试探
+				grid = getGridLoopX(x, y - 1);
+				if (grid.belong != belong) return 2;
+			}
 
 			return wy - y;
 		}
@@ -248,20 +293,17 @@ namespace DebugerModule.Data {
 		/// 添加战斗者
 		/// </summary>
 		/// <param name="battler"></param>
-		public void addBattler(RuntimeBattler battler) {
-			battlers.Add(battler);
-		}
 		public void addActor(int x, int y) {
-			addBattler(new RuntimeActor(this, x, y));
+			actor = new RuntimeActor(this, x, y);
 		}
 		public void addActor() {
-			addBattler(new RuntimeActor(this));
+			actor = new RuntimeActor(this);
 		}
 		public void addEnemy(int x, int y) {
-			addBattler(new RuntimeEnemy(this, x, y));
+			battlers.Add(new RuntimeEnemy(this, x, y));
 		}
 		public void addEnemy() {
-			addBattler(new RuntimeEnemy(this));
+			battlers.Add(new RuntimeEnemy(this));
 		}
 
 		#endregion
