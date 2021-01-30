@@ -13,7 +13,7 @@ namespace DebugerModule.Data {
 	/// <summary>
 	/// 战斗者
 	/// </summary>
-	public class RuntimeBattler : BaseRuntimeBattler {
+	public abstract class RuntimeBattler : BaseRuntimeBattler {
 
 		/// <summary>
 		/// 状态
@@ -31,7 +31,7 @@ namespace DebugerModule.Data {
 		public int y { get; protected set; }
 
 		[AutoConvert]
-		public bool direction { get; protected set; } = true; // 朝向（true 为右，false 为左
+		public bool direction { get; protected set; } // 朝向（true 为右，false 为左
 
 		[AutoConvert]
 		public float frequency { get; protected set; } = 1f; // 移动频率 s/次
@@ -39,9 +39,15 @@ namespace DebugerModule.Data {
 		public float speed { get; protected set; } = 1f; // 移动速度 m/s
 
 		/// <summary>
+		/// 地图尺寸
+		/// </summary>
+		public int mapX => map.mapX;
+		public int mapY => map.mapY;
+
+		/// <summary>
 		/// 下一个坐标
 		/// </summary>
-		public int nextX => (map.mapX + (direction ? x + 1 : x - 1)) % map.mapX;
+		public int nextX => (mapX + (direction ? x + 1 : x - 1)) % map.mapX;
 		public int nextY => y + nextWall; // wall 大于 2 会修改direction
 
 		/// <summary>
@@ -58,7 +64,13 @@ namespace DebugerModule.Data {
 		/// <summary>
 		/// 实际速度
 		/// </summary>
-		public float velocity { get; protected set; } = 0; 
+		public float velocity { get; protected set; } = 0;
+
+		/// <summary>
+		/// 初始位置
+		/// </summary>
+		public abstract Vector2 initPos { get; }
+		public abstract bool initDir { get; }
 
 		/// <summary>
 		/// 所在地图
@@ -76,6 +88,23 @@ namespace DebugerModule.Data {
 		/// 状态类型
 		/// </summary>
 		public override Type stateType => typeof(State);
+
+		#endregion
+
+		#region 状态
+
+		/// <summary>
+		/// 状态判断
+		/// </summary>
+		public bool isMoving => isState(State.Running) ||
+			isState(State.Jumping) || isState(State.Falling);
+		public bool isRunning => isState(State.Running);
+		public bool isJumping => isState(State.Jumping);
+		public bool isFalling => isState(State.Falling);
+
+		public bool isIdle => isState(State.Idle);
+
+		public bool isPanic => isState(State.Panic);
 
 		#endregion
 
@@ -190,11 +219,20 @@ namespace DebugerModule.Data {
 		/// </summary>
 		void initialize() {
 			changeState(State.Idle);
+			x = (int)initPos.x; y = (int)initPos.y;
+			direction = initDir;
 		}
 
 		/// <summary>
 		/// 初始化
 		/// </summary>
 		public RuntimeBattler() { }
+		public RuntimeBattler(Map map) {
+			this.map = map;
+			initialize();
+		}
+		public RuntimeBattler(Map map, int x, int y) : this(map) {
+			this.x = x; this.y = y;
+		}
 	}
 }

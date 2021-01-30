@@ -34,7 +34,7 @@ namespace DebugerModule.Controls {
 		/// <param name="pos"></param>
 		/// <returns></returns>
 		public Vector2 getPosition(Vector2 pos) {
-			return mapDisplay.getPosition(pos);
+			return mapDisplay.getGridPosition(pos);
 		}
 
 		/// <summary>

@@ -14,6 +14,7 @@ namespace DebugerModule.Controls {
 	/// </summary>
 	[RequireComponent(typeof(GridContainer))]
 	[RequireComponent(typeof(MapLineContainer))]
+	[RequireComponent(typeof(BattleGround))]
 	public class MapDisplay : ItemDisplay<Map> {
 
 		/// <summary>
@@ -81,6 +82,9 @@ namespace DebugerModule.Controls {
 		[RequireTarget]
 		[HideInInspector]
 		public MapLineContainer linesContainer;
+		[RequireTarget]
+		[HideInInspector]
+		public BattleGround battleground;
 
 		/// <summary>
 		/// 地图尺寸
@@ -111,16 +115,29 @@ namespace DebugerModule.Controls {
 		#region 数据
 
 		/// <summary>
-		/// 获取实际位置
+		/// 获取格子实际位置
 		/// </summary>
 		/// <param name="x"></param>
 		/// <param name="y"></param>
 		/// <returns></returns>
-		public Vector2 getPosition(float x, float y) {
+		public Vector2 getGridPosition(float x, float y) {
 			return new Vector2(x - mapX / 2f + 0.5f, y - mapY / 2f + 0.5f);
 		}
-		public Vector2 getPosition(Vector2 pos) {
-			return getPosition(pos.x, pos.y);
+		public Vector2 getGridPosition(Vector2 pos) {
+			return getGridPosition(pos.x, pos.y);
+		}
+
+		/// <summary>
+		/// 获取战斗者实际位置
+		/// </summary>
+		/// <param name="x"></param>
+		/// <param name="y"></param>
+		/// <returns></returns>
+		public Vector2 getBattlerPosition(float x, float y) {
+			return new Vector2(x - mapX / 2f + 0.5f, y - mapY / 2f);
+		}
+		public Vector2 getBattlerPosition(Vector2 pos) {
+			return getBattlerPosition(pos.x, pos.y);
 		}
 
 		/// <summary>
@@ -137,6 +154,8 @@ namespace DebugerModule.Controls {
 		/// </summary>
 		void setupLines() {
 			generateLines();
+
+			battleground.setItems(item.battlers);
 			linesContainer.setItems(paintableLines);
 		}
 

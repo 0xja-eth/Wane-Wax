@@ -120,7 +120,6 @@ namespace DebugerModule.Services {
 		protected override void updateOthers() {
 			base.updateOthers();
 			updateMap();
-			updateBattlers();
 		}
 
 		/// <summary>
@@ -129,14 +128,7 @@ namespace DebugerModule.Services {
 		void updateMap() {
 			currentMap.update();
 		}
-
-		/// <summary>
-		/// 更新角色
-		/// </summary>
-		void updateBattlers() {
-
-		}
-
+		
 		/// <summary>
 		/// 更新输入
 		/// </summary>

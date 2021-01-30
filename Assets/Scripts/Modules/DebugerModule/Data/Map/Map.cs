@@ -21,6 +21,8 @@ namespace DebugerModule.Data {
 		public int mapY { get; protected set; }
 		[AutoConvert]
 		public Grid[] grids { get; protected set; }
+		[AutoConvert]
+		public List<RuntimeBattler> battlers { get; protected set; }
 
 		/// <summary>
 		/// 刷新请求
@@ -33,6 +35,8 @@ namespace DebugerModule.Data {
 				return res;
 			}
 		}
+
+		#region 方块控制
 
 		/// <summary>
 		/// 获取方块
@@ -80,45 +84,7 @@ namespace DebugerModule.Data {
 		public bool isValidCoord(int x, int y) {
 			return x >= 0 && x < mapX && y >= 0 && y < mapY;
 		}
-
-		/// <summary>
-		/// 判断前方墙的高度
-		/// </summary>
-		public int judgeWall(int x, int y, Grid.Belong belong) {
-			var res = _judgeWall(x, y, belong);
-			return (belong == Grid.Belong.Enemy) ? -res : res;
-		}
-
-		int _judgeWall(int x, int y, Grid.Belong belong) {
-			var wy = y;
-			var grid = getGridLoopX(x, y);
-			if ((belong == Grid.Belong.Player && grid.belong == belong) ||
-				(belong == Grid.Belong.Enemy && grid.belong != belong)) // 空气
-																		// 向下试探
-				while (grid.belong == belong) {
-					if (--wy < 0) return -mapY;
-					grid = getGridLoopX(x, wy);
-				} else
-				// 向上试探
-				while (grid.belong != belong) {
-					if (++wy >= mapY) return mapY;
-					grid = getGridLoopX(x, wy);
-				}
-
-			return wy - y;
-		}
-
-		/// <summary>
-		/// 创建地图
-		/// </summary>
-		public void createMap(int mapX, int mapY) {
-			this.mapX = mapX; this.mapY = mapY;
-			grids = new Grid[mapX * mapY];
-
-			for (int y = 0; y < mapY; ++y)
-				for (int x = 0; x < mapX; ++x) setGrid(x, y);
-		}
-
+		
 		#region 格子放置
 
 		/// <summary>
@@ -204,7 +170,7 @@ namespace DebugerModule.Data {
 			var offsetY = y - rGrid.y;
 
 			// 遍历每个方块
-			foreach(var grid in grids.realGrids) {
+			foreach (var grid in grids.realGrids) {
 				var rx = grid.x + offsetX; // 实际地图坐标
 				var ry = grid.y + offsetY;
 
@@ -233,11 +199,79 @@ namespace DebugerModule.Data {
 
 		#endregion
 
+		#endregion
+
+		#region 地图控制
+
+		/// <summary>
+		/// 创建地图
+		/// </summary>
+		public void createMap(int mapX, int mapY) {
+			this.mapX = mapX; this.mapY = mapY;
+			grids = new Grid[mapX * mapY];
+
+			for (int y = 0; y < mapY; ++y)
+				for (int x = 0; x < mapX; ++x) setGrid(x, y);
+		}
+
+		/// <summary>
+		/// 判断前方墙的高度
+		/// </summary>
+		public int judgeWall(int x, int y, Grid.Belong belong) {
+			var res = _judgeWall(x, y, belong);
+			return (belong == Grid.Belong.Enemy) ? -res : res;
+		}
+		int _judgeWall(int x, int y, Grid.Belong belong) {
+			var wy = y;
+			var grid = getGridLoopX(x, y);
+			if ((belong == Grid.Belong.Player && grid.belong == belong) ||
+				(belong == Grid.Belong.Enemy && grid.belong != belong)) // 空气
+																		// 向下试探
+				while (grid.belong == belong) {
+					if (--wy < 0) return -mapY;
+					grid = getGridLoopX(x, wy);
+				} else
+				// 向上试探
+				while (grid.belong != belong) {
+					if (++wy >= mapY) return mapY;
+					grid = getGridLoopX(x, wy);
+				}
+
+			return wy - y;
+		}
+
+		#endregion
+
+		#region 成员控制
+
+		/// <summary>
+		/// 添加战斗者
+		/// </summary>
+		/// <param name="battler"></param>
+		public void addBattler(RuntimeBattler battler) {
+			battlers.Add(battler);
+		}
+		public void addActor(int x, int y) {
+			addBattler(new RuntimeActor(this, x, y));
+		}
+		public void addActor() {
+			addBattler(new RuntimeActor(this));
+		}
+		public void addEnemy(int x, int y) {
+			addBattler(new RuntimeEnemy(this, x, y));
+		}
+		public void addEnemy() {
+			addBattler(new RuntimeEnemy(this));
+		}
+
+		#endregion
+
 		/// <summary>
 		/// 更新
 		/// </summary>
 		public void update() {
 			updateGrids();
+			updateBattlers();
 			updatePlacingGrids();
 		}
 
@@ -245,7 +279,14 @@ namespace DebugerModule.Data {
 		/// 更新格子状态
 		/// </summary>
 		void updateGrids() {
-			foreach(var grid in grids) grid.preview = false;
+			foreach (var grid in grids) grid.preview = false;
+		}
+
+		/// <summary>
+		/// 更新战斗者状态
+		/// </summary>
+		void updateBattlers() {
+			foreach (var battler in battlers) battler.update();
 		}
 
 		/// <summary>
