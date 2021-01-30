@@ -19,7 +19,7 @@ namespace DebugerModule {
 		/// <summary>
 		/// 地图尺寸
 		/// </summary>
-		public const int MapX = 20;
+		public const int MapX = 28;
 		public const int MapY = 16;
 	}
 }

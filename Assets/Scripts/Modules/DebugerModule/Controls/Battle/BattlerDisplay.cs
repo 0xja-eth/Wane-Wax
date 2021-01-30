@@ -118,7 +118,7 @@ namespace DebugerModule.Controls {
 		/// 更新位置
 		/// </summary>
 		void updatePosition() {
-			if (!item.isMoving) return;
+			//if (!item.isMoving) return;
 
 			var rx = item.realX + 0.5f - mapX / 2;
 			var ry = item.realY - mapY / 2;

@@ -228,6 +228,48 @@ namespace DebugerModule.Data {
 		}
 
 		/// <summary>
+		/// 获取坠落高度
+		/// </summary>
+		/// <returns></returns>
+		public int getFallingY(int x, int y, Grid.Belong belong) {
+			var grid = getGridLoopX(x, y);
+
+			if (grid.belong == belong) {
+				// 向下试探
+				do {
+					if (belong == Grid.Belong.Player
+						&& --y < 0) return -mapY;
+					if (belong == Grid.Belong.Enemy
+						&& ++y >= mapY) return 2 * mapY;
+					grid = getGridLoopX(x, y);
+				} while (grid.belong == belong);
+
+				return belong == Grid.Belong.Player ? y + 1 : y - 1;
+			}
+			return getUpperY(x, y, belong);
+		}
+
+		/// <summary>
+		/// 获取提升高度（被方块覆盖时）
+		/// </summary>
+		/// <returns></returns>
+		public int getUpperY(int x, int y, Grid.Belong belong) {
+			var grid = getGridLoopX(x, y);
+
+			if (grid.belong == belong) return y;
+			// 向上试探
+			do {
+				if (belong == Grid.Belong.Player
+					&& ++y >= mapY) return 2 * mapY;
+				if (belong == Grid.Belong.Enemy
+					&& --y < 0) return -mapY;
+				grid = getGridLoopX(x, y);
+			} while (grid.belong != belong);
+
+			return y;
+		}
+
+		/// <summary>
 		/// 判断前方墙的高度
 		/// </summary>
 		public int judgeWall(int x, int y, Grid.Belong belong) {
@@ -250,10 +292,11 @@ namespace DebugerModule.Data {
 				if (grid.belong != belong) return 2;
 
 				// 向下试探
-				while (grid.belong == belong) {
+				do {
 					if (--wy < 0) return -mapY;
 					grid = getGridLoopX(x, wy);
-				}
+				} while (grid.belong == belong);
+
 				return wy - y + 1;
 			} else {
 				// 查看头顶
@@ -282,10 +325,11 @@ namespace DebugerModule.Data {
 				if (grid.belong != belong) return 2;
 
 				// 向下试探
-				while (grid.belong == belong) {
+				do {
 					if (++wy >= mapY) return -mapY;
 					grid = getGridLoopX(x, wy);
-				}
+				} while (grid.belong == belong);
+
 				return y - wy + 1;
 			} else {
 				// 查看头顶
@@ -302,6 +346,48 @@ namespace DebugerModule.Data {
 
 				return 1;
 			}
+		}
+
+		/// <summary>
+		/// 消除行方块
+		/// </summary>
+		/// <param name="y"></param>
+		public void clearLines(int y) {
+			int yy = y;
+			var belong = (y >= mapY >> 1) ? 
+				Grid.Belong.Player : Grid.Belong.Enemy;
+			switch (belong) {
+				case Grid.Belong.Player:
+					for (; yy < mapY - 1; ++yy)
+						for (int x = 0; x < mapX; ++x) {
+							var grid = getGrid(x, yy);
+							var uGrid = getGrid(x, yy + 1);
+
+							grid.changeBelong(uGrid.belong);
+							grid.changeType(uGrid.type);
+						}
+					break;
+
+				case Grid.Belong.Enemy:
+					for (; yy > 0; --yy)
+						for (int x = 0; x < mapX; ++x) {
+							var grid = getGrid(x, yy);
+							var uGrid = getGrid(x, yy - 1);
+
+							grid.changeBelong(uGrid.belong);
+							grid.changeType(uGrid.type);
+						}
+					break;
+			}
+
+			for (int x = 0; x < mapX; ++x) {
+				var grid = getGrid(x, yy);
+
+				grid?.changeBelong(belong);
+				grid?.changeType(Grid.Type.Normal);
+			}
+
+			_refreshRequest = true;
 		}
 
 		#endregion

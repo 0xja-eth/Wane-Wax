@@ -124,6 +124,7 @@ namespace DebugerModule.Services {
 		protected override void updateOthers() {
 			base.updateOthers();
 			updateMap(); updateEnemy();
+			updateClearLines();
 		}
 
 		/// <summary>
@@ -135,7 +136,10 @@ namespace DebugerModule.Services {
 
 		// TODO: 封装 AI 模块
 		float placeTime = 0;
-		public float speed { get; protected set; } = 2; // 放置速度 s/个
+		public float aiSpeed { get; protected set; } = 3; // 放置速度 s/个
+
+		float clearTime = 0;
+		public float clearSpeed { get; protected set; } = 7; // 清除速度 s/个
 
 		/// <summary>
 		/// 更新敌人
@@ -146,7 +150,7 @@ namespace DebugerModule.Services {
 			placeGrids(enemyGrids, currentMap.actor.x, true);
 
 			placeTime += Time.deltaTime;
-			if (placeTime >= speed) {
+			if (placeTime >= aiSpeed) {
 				placeGrids(enemyGrids, currentMap.actor.x);
 				enemyGrids = null;
 				placeTime = 0;
@@ -154,11 +158,27 @@ namespace DebugerModule.Services {
 		}
 
 		/// <summary>
+		/// 更新敌人
+		/// </summary>
+		void updateClearLines() {
+			clearTime += Time.deltaTime;
+			if (clearTime >= clearSpeed) {
+				var rand = Random.Range(0f, 1f);
+				if (rand > 0.5f)
+					currentMap.clearLines(currentMap.mapY >> 1);
+				else
+					currentMap.clearLines((currentMap.mapY >> 1) - 1);
+				clearTime = 0;
+			}
+		}
+
+		/// <summary>
 		/// 更新输入
 		/// </summary>
 		void updateInputting() {
-			placeGrids(currentGrids, (int)mousePos.x, 
-				!Input.GetKeyDown(KeyCode.Space));
+			if (Input.GetKeyDown(KeyCode.Mouse1)) currentGrids.rotate();
+
+			placeGrids(currentGrids, (int)mousePos.x, !Input.GetKeyDown(KeyCode.Mouse0));
 		}
 
 		/// <summary>

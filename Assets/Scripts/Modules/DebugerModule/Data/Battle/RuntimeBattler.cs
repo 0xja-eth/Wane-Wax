@@ -36,7 +36,7 @@ namespace DebugerModule.Data {
 		[AutoConvert]
 		public float frequency { get; protected set; } = 0f; // 移动频率 s/次
 		[AutoConvert]
-		public float speed { get; protected set; } = 1f; // 移动速度 m/s
+		public float speed { get; protected set; } = 2f; // 移动速度 m/s
 
 		/// <summary>
 		/// 地图尺寸
@@ -49,6 +49,8 @@ namespace DebugerModule.Data {
 		/// </summary>
 		public int nextX => (mapX + (direction ? x + 1 : x - 1)) % map.mapX;
 		public virtual int nextY => y + nextWall; // wall 大于 2 会修改direction
+
+		public int prevX => (mapX + (direction ? x - 1 : x + 1)) % map.mapX;
 
 		/// <summary>
 		/// 下一个坐标墙高度
@@ -131,9 +133,11 @@ namespace DebugerModule.Data {
 
 			var state = getMoveState();
 
-			if (state == State.Panic) return;
-			
-			targetX = nextX; targetY = nextY;
+			if (state == State.Panic) {
+				targetX = x; targetY = map.getFallingY(x, y, belong);
+			} else {
+				targetX = nextX; targetY = nextY;
+			}
 
 			changeState(state);
 		}
@@ -147,8 +151,11 @@ namespace DebugerModule.Data {
 			else if (wall == 0) return State.Running;
 			else if (wall == 1) return State.Jumping;
 			// wall >= 2
-			else if (backWall) return State.Panic;
-			else { 
+			else if (backWall) {
+				_nextWall = 999; // 重置 nextWall
+				direction = !direction;
+				return State.Panic;
+			} else {
 				_nextWall = 999; // 重置 nextWall
 				direction = !direction;
 				return getMoveState(true);
@@ -203,11 +210,20 @@ namespace DebugerModule.Data {
 		#region 更新
 
 		/// <summary>
+		/// 更新任意状态
+		/// </summary>
+		protected override void updateAnyState() {
+			base.updateAnyState();
+		}
+
+		/// <summary>
 		/// 更新下落
 		/// </summary>
 		protected virtual void updateMoving() {
 			Debug.Log("update" + state + ": " + runTime + "\nreal: " + realX + ", " + realY +
 				", target: " + targetX + ", " + targetY + ", coord: " + x + ", " + y);
+
+			if (x == targetX) return;
 
 			runTime += Time.deltaTime;
 			var speed = direction ? this.speed : -this.speed;
@@ -240,13 +256,18 @@ namespace DebugerModule.Data {
 		/// 更新跑步
 		/// </summary>
 		protected virtual void _updatePanic() {
-			move();
+			Debug.Log("updatePanic: " + idleTime + "\nreal: " + realX + ", " + realY +
+				", target: " + targetX + ", " + targetY + ", coord: " + x + ", " + y);
+
+			realX = x = targetX; realY = y = targetY; move();
 		}
 
 		/// <summary>
 		/// 更新跑步
 		/// </summary>
 		protected virtual void _updateRunning() {
+			var upy = map.getUpperY(x, y, belong);
+			if (upy != y) realY = y = targetY = upy;
 			updateMoving();
 		}
 

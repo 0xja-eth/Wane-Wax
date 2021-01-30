@@ -109,12 +109,12 @@ AnimatorStateMachine:
   m_ChildStateMachines: []
   m_AnyStateTransitions:
   - {fileID: 5767296222307737169}
-  - {fileID: 4805467326370705111}
   - {fileID: -7548406050540255978}
   - {fileID: -5905660753817983348}
   - {fileID: 5992551211844400351}
   - {fileID: 5758601483362470654}
   - {fileID: 8614164604278030197}
+  - {fileID: 4805467326370705111}
   m_EntryTransitions: []
   m_StateMachineTransitions: {}
   m_StateMachineBehaviours: []
@@ -302,6 +302,9 @@ AnimatorStateTransition:
   - m_ConditionMode: 1
     m_ConditionEvent: Running
     m_EventTreshold: 0
+  - m_ConditionMode: 1
+    m_ConditionEvent: Idle
+    m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 6784451382711856856}
   m_Solo: 0
@@ -355,7 +358,7 @@ AnimatorStateTransition:
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 8041480898124772991}
   m_Solo: 0
-  m_Mute: 0
+  m_Mute: 1
   m_IsExit: 0
   serializedVersion: 3
   m_TransitionDuration: 0
