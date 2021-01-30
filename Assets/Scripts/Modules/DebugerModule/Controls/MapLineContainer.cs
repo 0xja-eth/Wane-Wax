@@ -5,7 +5,7 @@ using UnityEngine;
 
 using ExerComps.Controls.ItemDisplays;
 
-namespace DebugerModule.Components {
+namespace DebugerModule.Controls {
 
 	using Data;
 

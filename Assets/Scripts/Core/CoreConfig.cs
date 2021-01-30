@@ -38,15 +38,7 @@ namespace Core {
 			NoneScene = -1,
 
 			TitleScene = 0,
-
-			EnglishProMapScene,
-			EnglishProBusinessManScene,
-			EnglishProPlotScene,
-			EnglishProListenScene,
-			EnglishProCorrectionScene,
-			EnglishProPhraseScene,
-			EnglishProBattleScene,
-			EnglishProPackScene,
+			GameScene,
 		}
 
 		/// <summary>

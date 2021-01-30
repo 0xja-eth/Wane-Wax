@@ -5,15 +5,14 @@ using UnityEngine;
 
 using ExerComps.Controls.ItemDisplays;
 
-namespace DebugerModule.Components {
+namespace DebugerModule.Controls {
 
 	using Data;
 
 	/// <summary>
 	/// 地图显示
 	/// </summary>
-	[RequireComponent(typeof(MeshRenderer))]
-	[RequireComponent(typeof(BoxCollider2D))]
+	//[RequireComponent(typeof(BoxCollider2D))]
 	public class GridDisplay : ItemDisplay<Grid> {
 
 		/// <summary>
@@ -25,14 +24,13 @@ namespace DebugerModule.Components {
 		/// <summary>
 		/// 外部组件设置
 		/// </summary>
-		public GameObject previewObject;
+		public GameObject playerObject; // player 时的外观
+		public GameObject enemyObject; // enemy 时的外观
+		public GameObject previewObject; // preview 时的外观
 
 		/// <summary>
 		/// 内部组件设置
 		/// </summary>
-		[RequireTarget]
-		protected new MeshRenderer renderer;
-
 		public MapDisplay mapDisplay { get; set; }
 
 		#region 更新
@@ -77,14 +75,10 @@ namespace DebugerModule.Components {
 		/// </summary>
 		/// <param name="item"></param>
 		void drawBelong(Grid item) {
-			if (item.isPlayer) {
-				gameObject.layer = PlayerLayer;
-				renderer.enabled = false;
-			}
-			if (item.isEnemy) {
-				gameObject.layer = EnemyLayer;
-				renderer.enabled = true;
-			}
+			playerObject.SetActive(item.isPlayer);
+			enemyObject.SetActive(item.isEnemy);
+			//if (item.isPlayer) gameObject.layer = PlayerLayer;
+			//if (item.isEnemy) gameObject.layer = EnemyLayer;
 		}
 
 		#endregion

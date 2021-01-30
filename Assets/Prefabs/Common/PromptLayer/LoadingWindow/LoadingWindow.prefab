@@ -574,12 +574,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 979267126178984338}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ed8d6e240d3aeb1418596be42da8c1a5, type: 3}
+  m_Script: {fileID: 11500000, guid: 26a30bd3578f3a344833bd9252889dd6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animator: {fileID: 0}
+  showDebug: 0
   background: {fileID: 0}
-  shownState: Shown
+  showingState: Show
+  hidingState: Hide
   hiddenState: Hidden
   shownAttr: shown
   progressText: {fileID: 979267126503968344}
