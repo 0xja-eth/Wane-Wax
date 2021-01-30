@@ -46,9 +46,8 @@ namespace DebugerModule.Controls {
 
 			var points = new List<Vector2>();
 
-			foreach(var line in lines) {
-				points.Add(line.p1); points.Add(line.p2);
-			}
+			if (lines.Count > 0) points.Add(lines[0].p1);
+			foreach(var line in lines) points.Add(line.p2);
 
 			lineRenderer.positionCount = points.Count;
 

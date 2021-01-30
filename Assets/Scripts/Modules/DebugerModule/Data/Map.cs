@@ -23,11 +23,31 @@ namespace DebugerModule.Data {
 		public Grid[] grids { get; protected set; }
 
 		/// <summary>
+		/// 刷新请求
+		/// </summary>
+		bool _refreshRequest;
+		public bool refreshRequest {
+			get {
+				var res = _refreshRequest;
+				_refreshRequest = false;
+				return res;
+			}
+		}
+
+		/// <summary>
 		/// 获取方块
 		/// </summary>
 		public Grid getGrid(int x, int y) {
 			if (!isValidCoord(x, y)) return null;
 			return grids[index(x, y)];
+		}
+		public Grid getGridIgnoreY(int x, int y) {
+			y = Mathf.Clamp(y, 0, mapY - 1);
+			return getGrid(x, y);
+		}
+		public Grid getGridIgnoreX(int x, int y) {
+			x = Mathf.Clamp(x, 0, mapX - 1);
+			return getGrid(x, y);
 		}
 		public Grid setGrid(int x, int y, Grid grid = null) {
 			if (!isValidCoord(x, y)) return null;
@@ -94,11 +114,12 @@ namespace DebugerModule.Data {
 				var rx = grid.x + offsetX; // 实际地图坐标
 				var ry = grid.y + offsetY;
 
-				if (preview && getGrid(rx, ry) != null)
+				if (preview)
 					previewPos.Add(new Vector2(rx, ry));
 				else {
 					changeGrid(rx, ry, grids.belong);
 					changeGrid(rx, ry, newGridType());
+					_refreshRequest = true;
 				}
 			}
 		}
@@ -134,6 +155,7 @@ namespace DebugerModule.Data {
 			}
 			if (res == null && x > 0) // 找不到放置点
 				return getPlacePoint(grids, x - 1);
+
 			return res;
 		}
 
@@ -154,7 +176,7 @@ namespace DebugerModule.Data {
 				var rx = grid.x + offsetX; // 实际地图坐标
 				var ry = grid.y + offsetY;
 
-				if (judgePointBelong(rx, ry, grids.belong)) return false;
+				if (!isPointValid(rx, ry, grids.belong)) return false;
 			}
 			return true;
 		}
@@ -162,11 +184,20 @@ namespace DebugerModule.Data {
 		/// <summary>
 		/// 判断某点的归属
 		/// </summary>
-		bool judgePointBelong(int x, int y, Grid.Belong belong) {
-			var grid = getGrid(x, y);
+		bool isPointValid(int x, int y, Grid.Belong belong) {
+			var grid = getGridIgnoreY(x, y);
 			if (grid == null) return false;
-			return grid.belong == belong; 
+			return grid.belong != belong;
 		}
+
+		///// <summary>
+		///// 判断某点的归属
+		///// </summary>
+		//bool judgePointBelong(int x, int y, Grid.Belong belong) {
+		//	var grid = getGrid(x, y);
+		//	if (grid == null) return false;
+		//	return grid.belong == belong;
+		//}
 
 		#endregion
 
@@ -189,8 +220,10 @@ namespace DebugerModule.Data {
 		/// 更新放置
 		/// </summary>
 		void updatePlacingGrids() {
-			foreach(var pos in previewPos) 
-				getGrid((int)pos.x, (int)pos.y).preview = true;
+			foreach(var pos in previewPos) {
+				var grid = getGrid((int)pos.x, (int)pos.y);
+				if (grid != null) grid.preview = true;
+			}
 			previewPos.Clear();
 		}
 

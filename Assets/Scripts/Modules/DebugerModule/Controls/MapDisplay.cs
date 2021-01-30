@@ -94,8 +94,22 @@ namespace DebugerModule.Controls {
 		List<Line> rawLines = new List<Line>();
 		List<List<Line>> paintableLines = new List<List<Line>>();
 
+		#region 更新
+
+		/// <summary>
+		/// 更新
+		/// </summary>
+		protected override void update() {
+			base.update();
+			if (item == null) return;
+			if (item.refreshRequest)
+				setupLines();
+		}
+
+		#endregion
+
 		#region 数据
-		
+
 		/// <summary>
 		/// 获取实际位置
 		/// </summary>
@@ -114,9 +128,15 @@ namespace DebugerModule.Controls {
 		/// </summary>
 		protected override void onItemChanged() {
 			base.onItemChanged();
-			generateLines();
-
 			gridContainer.setItems(item?.grids);
+			setupLines();
+		}
+
+		/// <summary>
+		/// 计算线段
+		/// </summary>
+		void setupLines() {
+			generateLines();
 			linesContainer.setItems(paintableLines);
 		}
 
@@ -144,7 +164,6 @@ namespace DebugerModule.Controls {
 						var p1 = grid.point(Grid.Direction.LD);
 						var p2 = grid.point(Grid.Direction.RD);
 						rawLines.Add(new Line(p1, p2));
-						break;
 					}
 					lastGrid = grid;
 				}
@@ -159,7 +178,6 @@ namespace DebugerModule.Controls {
 						var p1 = grid.point(Grid.Direction.LD);
 						var p2 = grid.point(Grid.Direction.LU);
 						rawLines.Add(new Line(p1, p2));
-						break;
 					}
 					lastGrid = grid;
 				}
@@ -177,14 +195,21 @@ namespace DebugerModule.Controls {
 			foreach (var line in rawLines) {
 				if (line.flag) continue; // 遍历过
 
-				line.flag = true;
-				makePaintableLines(line.p1);
+				makePaintableLines(line);
 			}
 		}
 		void makePaintableLines(Vector2 point) {
 			var lines = new List<Line>();
 
 			makePaintableLines(lines, point);
+
+			paintableLines.Add(lines);
+		}
+		void makePaintableLines(Line line) {
+			var lines = new List<Line>();
+			line.flag = true; lines.Add(line);
+
+			makePaintableLines(lines, line.p2);
 
 			paintableLines.Add(lines);
 		}
