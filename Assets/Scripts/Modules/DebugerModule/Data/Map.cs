@@ -89,8 +89,12 @@ namespace DebugerModule.Data {
 				var rx = grid.x + offsetX; // 实际地图坐标
 				var ry = grid.y + offsetY;
 
-				changeGrid(rx, ry, grids.belong);
-				changeGrid(rx, ry, newGridType(preview));
+				if (preview && getGrid(rx, ry) != null)
+					getGrid(rx, ry).preview = true;
+				else {
+					changeGrid(rx, ry, grids.belong);
+					changeGrid(rx, ry, newGridType());
+				}
 			}
 		}
 
@@ -99,10 +103,7 @@ namespace DebugerModule.Data {
 		/// </summary>
 		/// <param name="preview"></param>
 		/// <returns></returns>
-		Grid.Type newGridType(bool preview = false) {
-			if (preview) return Grid.Type.Preview;
-			return Grid.Type.Normal;
-		}
+		Grid.Type newGridType() { return Grid.Type.Normal; }
 
 		/// <summary>
 		/// 获取放置点
@@ -163,6 +164,21 @@ namespace DebugerModule.Data {
 		}
 
 		#endregion
+
+		/// <summary>
+		/// 更新
+		/// </summary>
+		public void update() {
+			updateGrids();
+		}
+
+		/// <summary>
+		/// 更新格子状态
+		/// </summary>
+		void updateGrids() {
+			foreach(var grid in grids) 
+				grid.preview = false;
+		}
 
 		/// <summary>
 		/// 构造函数

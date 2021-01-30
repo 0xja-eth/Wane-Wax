@@ -93,14 +93,41 @@ namespace DebugerModule.Services {
 
 		#endregion
 
+		#region 输入
+
+		/// <summary>
+		/// 鼠标位置（在地图上的位置）
+		/// </summary>
+		public Vector2 mousePos {
+			get {
+				var mPos = Input.mousePosition;
+				mPos = Camera.main.ScreenToWorldPoint(mPos);
+
+				mPos.x += currentMap.mapX / 2f;
+				mPos.y += currentMap.mapY / 2f;
+
+				return mPos;
+			}
+		}
+
+		#endregion
+
 		#region 更新
 
 		/// <summary>
 		/// 更新
 		/// </summary>
 		protected override void updateOthers() {
-			base.updateOthers();
+			updateMap();
 			updateBattlers();
+			base.updateOthers();
+		}
+
+		/// <summary>
+		/// 更新地图
+		/// </summary>
+		void updateMap() {
+			currentMap.update();
 		}
 
 		/// <summary>
@@ -114,11 +141,9 @@ namespace DebugerModule.Services {
 		/// 更新输入
 		/// </summary>
 		void updateInputting() {
-			var mPos = Input.mousePosition;
+			Debug.Log("Mouse: " + mousePos);
 
-			Debug.Log("Mouse: " + mPos);
-
-			placeGrids(currentGrids, (int)mPos.x, 
+			placeGrids(currentGrids, (int)mousePos.x, 
 				!Input.GetKeyDown(KeyCode.Space));
 		}
 

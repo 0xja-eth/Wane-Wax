@@ -67,7 +67,7 @@ namespace DebugerModule.Controls {
 		/// </summary>
 		/// <param name="item"></param>
 		void drawInterface(Grid item) {
-			previewObject.SetActive(item.type == Grid.Type.Preview);
+			previewObject.SetActive(item.preview);
 		}
 
 		/// <summary>

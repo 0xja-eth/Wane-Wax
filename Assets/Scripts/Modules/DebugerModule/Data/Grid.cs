@@ -16,7 +16,7 @@ namespace DebugerModule.Data {
 		/// 方块类型
 		/// </summary>
 		public enum Type {
-			Normal, Preview
+			Normal
 		}
 
 		/// <summary>
@@ -54,6 +54,11 @@ namespace DebugerModule.Data {
 		[AutoConvert]
 		public Belong belong { get; protected set; } 
 			= Belong.None; // belong 是指当前方块的可通行方（空气）
+
+		/// <summary>
+		/// 预览状态
+		/// </summary>
+		public bool preview { get; set; }
 
 		/// <summary>
 		/// 地图

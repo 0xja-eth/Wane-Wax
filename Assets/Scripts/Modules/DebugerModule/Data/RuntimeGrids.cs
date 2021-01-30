@@ -77,11 +77,9 @@ namespace DebugerModule.Data {
 		/// 90度旋转 => x → y, y → -x
 		/// </summary>
 		List<Grid> processRotate(int rotate, List<Grid> grids) {
-			var cnt = grids.Count;
-			var res = new List<Grid>(cnt);
+			var res = new List<Grid>(grids.Count);
 
-			for (int i = 0; i < cnt; ++i) {
-				var grid = grids[i];
+			foreach(var grid in grids) { 
 				int x = grid.x, y = grid.y;
 
 				switch(rotate) {
@@ -93,7 +91,7 @@ namespace DebugerModule.Data {
 				// 如果是敌人，则镜像
 				if (operer == Grid.Belong.Enemy) y = -y;
 
-				res[i] = new Grid(x, y);
+				res.Add(new Grid(x, y));
 			}
 			return res;
 		}
