@@ -85,15 +85,20 @@ namespace DebugerModule.Data {
 		/// 判断前方墙的高度
 		/// </summary>
 		public int judgeWall(int x, int y, Grid.Belong belong) {
+			var res = _judgeWall(x, y, belong);
+			return (belong == Grid.Belong.Enemy) ? -res : res;
+		}
+
+		int _judgeWall(int x, int y, Grid.Belong belong) {
 			var wy = y;
 			var grid = getGridLoopX(x, y);
-			if (grid.belong == belong) // 空气
-				// 向下试探
+			if ((belong == Grid.Belong.Player && grid.belong == belong) ||
+				(belong == Grid.Belong.Enemy && grid.belong != belong)) // 空气
+																		// 向下试探
 				while (grid.belong == belong) {
 					if (--wy < 0) return -mapY;
 					grid = getGridLoopX(x, wy);
-				}
-			else 
+				} else
 				// 向上试探
 				while (grid.belong != belong) {
 					if (++wy >= mapY) return mapY;
