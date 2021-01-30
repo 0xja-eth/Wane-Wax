@@ -14,14 +14,23 @@ namespace DebugerModule.Data {
 		/// 方块类型
 		/// </summary>
 		public enum Type {
-			Normal
+			Normal, Preview
 		}
 
 		/// <summary>
 		/// 方块归属
 		/// </summary>
 		public enum Belong {
-			Player, Enemy
+			None, Player, Enemy
+		}
+
+		/// <summary>
+		/// 反向
+		/// </summary>
+		public static Belong opposite(Belong belong) {
+			if (belong == Belong.Player) return Belong.Enemy;
+			if (belong == Belong.Enemy) return Belong.Player;
+			return belong;
 		}
 
 		/// <summary>
@@ -34,12 +43,25 @@ namespace DebugerModule.Data {
 		[AutoConvert]
 		public Type type { get; protected set; } = Type.Normal;
 		[AutoConvert]
-		public Belong belong { get; protected set; }
+		public Belong belong { get; protected set; } 
+			= Belong.None; // belong 是指当前方块的可通行方（空气）
 
 		/// <summary>
 		/// 地图
 		/// </summary>
 		public Map map { get; protected set; }
+
+		/// <summary>
+		/// 刷新请求
+		/// </summary>
+		bool _refreshRequest;
+		public bool refreshRequest {
+			get {
+				var res = _refreshRequest;
+				_refreshRequest = false;
+				return res;
+			}
+		}
 
 		/// <summary>
 		/// 地图尺寸
@@ -50,7 +72,8 @@ namespace DebugerModule.Data {
 		/// <summary>
 		/// 位置领域
 		/// </summary>
-		public Belong posBelong => y >= mapY >> 1 ? Belong.Player : Belong.Enemy;
+		public Belong posBelong => map == null ? Belong.None :
+			(y >= mapY >> 1 ? Belong.Player : Belong.Enemy);
 
 		/// <summary>
 		/// 配置
@@ -66,10 +89,30 @@ namespace DebugerModule.Data {
 		}
 
 		/// <summary>
+		/// 改变方块类型
+		/// </summary>
+		/// <param name="type"></param>
+		public void changeType(Type type) {
+			this.type = type;
+			_refreshRequest = true;
+		}
+
+		/// <summary>
+		/// 改变方块归属
+		/// </summary>
+		/// <param name="type"></param>
+		public void changeBelong(Belong belong) {
+			this.belong = belong;
+			_refreshRequest = true;
+		}
+
+		/// <summary>
 		/// 构造函数
 		/// </summary>
 		public Grid() { }
 		public Grid(Belong belong) { setup(belong); }
-		public Grid(int x, int y) { setup(x, y); }
+		public Grid(int x, int y, Map map = null) {
+			this.map = map; setup(x, y);
+		}
 	}
 }
