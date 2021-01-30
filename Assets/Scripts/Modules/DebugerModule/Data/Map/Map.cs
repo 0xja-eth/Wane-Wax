@@ -254,12 +254,18 @@ namespace DebugerModule.Data {
 					if (--wy < 0) return -mapY;
 					grid = getGridLoopX(x, wy);
 				}
+				return wy - y + 1;
 			} else {
 				// 向上试探
 				grid = getGridLoopX(x, y + 1);
 				if (grid.belong != belong) return 2;
+
+				// 再向上试探一格（防止上面还有）
+				grid = getGridLoopX(x, y + 2);
+				if (grid.belong != belong) return 2;
+
+				return 1;
 			}
-			return wy - y;
 		}
 		int judgeEnemyWall(int x, int y) {
 			var wy = y;
@@ -276,13 +282,18 @@ namespace DebugerModule.Data {
 					if (++wy < 0) return -mapY;
 					grid = getGridLoopX(x, wy);
 				}
+				return y - wy + 1;
 			} else {
 				// 向上试探
 				grid = getGridLoopX(x, y - 1);
 				if (grid.belong != belong) return 2;
-			}
+				
+				// 再向上试探
+				grid = getGridLoopX(x, y - 2);
+				if (grid.belong != belong) return 2;
 
-			return wy - y;
+				return 1;
+			}
 		}
 
 		#endregion

@@ -55,6 +55,12 @@ namespace DebugerModule.Controls {
 		public bool isEnemy => item?.isEnemy ?? false;
 
 		/// <summary>
+		/// 地图尺寸
+		/// </summary>
+		public int mapX => mapDisplay.mapX;
+		public int mapY => mapDisplay.mapY;
+
+		/// <summary>
 		/// 内部变量定义
 		/// </summary>
 		RuntimeBattler lastItem;
@@ -80,6 +86,7 @@ namespace DebugerModule.Controls {
 		/// 更新状态
 		/// </summary>
 		void updateState() {
+			debugLog("sate: " + item.state);
 			animator.setVar(item.state);
 		}
 
@@ -87,10 +94,9 @@ namespace DebugerModule.Controls {
 		/// 更新速度
 		/// </summary>
 		void updateVelocity() {
-			var velocity = rigidbody.velocity;
-			velocity.x = item.velocity;
-
-			rigidbody.velocity = velocity;
+			//var force = item.velocity * rigidbody.mass;
+			//debugLog("Velocity: " + item.velocity);
+			//rigidbody.AddForce(new Vector2(force, 0), ForceMode2D.Impulse);
 		}
 
 		/// <summary>
@@ -105,15 +111,28 @@ namespace DebugerModule.Controls {
 		/// </summary>
 		void _enterJumping() {
 			var force = isEnemy ? -jumpForce : jumpForce;
-			rigidbody.AddForce(new Vector2(0, force));
+			rigidbody.AddForce(new Vector2(0, force), ForceMode2D.Impulse);
 		}
 
 		/// <summary>
 		/// 更新位置
 		/// </summary>
 		void updatePosition() {
-			var pos = transform.position;
-			item.syncPosition(pos.x, pos.y);
+			if (!item.isMoving) return;
+
+			var rx = item.realX + 0.5f - mapX/2;
+			var pos = transform.position; pos.x = rx;
+
+			transform.position = pos;
+
+			var ry = pos.y + mapY / 2;
+
+			item.syncPosition(item.realX, ry);
+			
+			//var pos = transform.position;
+			//pos = mapDisplay.getBattlerCoord(pos);
+
+			//item.syncPosition(pos.x, pos.y);
 		}
 
 		/// <summary>
@@ -121,12 +140,25 @@ namespace DebugerModule.Controls {
 		/// </summary>
 		void updateGravity() {
 			if (!isEnemy) return;
-			rigidbody.AddForce(new Vector2(0, 9.8f*2));
+			rigidbody.AddForce(new Vector2(0, 5f * 2), ForceMode2D.Impulse);
 		}
 
 		#endregion
 
 		#region 数据
+
+		/// <summary>
+		/// 获取实际位置
+		/// </summary>
+		/// <param name="x"></param>
+		/// <param name="y"></param>
+		/// <returns></returns>
+		public Vector2 getPosition(int x, int y) {
+			return mapDisplay.getBattlerPosition(x, y);
+		}
+		public Vector2 getCoord(int x, int y) {
+			return mapDisplay.getBattlerCoord(x, y);
+		}
 
 		/// <summary>
 		/// 物品改变回调

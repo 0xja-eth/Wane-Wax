@@ -34,9 +34,9 @@ namespace DebugerModule.Data {
 		public bool direction { get; protected set; } // 朝向（true 为右，false 为左
 
 		[AutoConvert]
-		public float frequency { get; protected set; } = 1f; // 移动频率 s/次
+		public float frequency { get; protected set; } = 0f; // 移动频率 s/次
 		[AutoConvert]
-		public float speed { get; protected set; } = 1f; // 移动速度 m/s
+		public float speed { get; protected set; } = 0.5f; // 移动速度 m/s
 
 		/// <summary>
 		/// 地图尺寸
@@ -85,6 +85,7 @@ namespace DebugerModule.Data {
 		/// <summary>
 		/// 目标
 		/// </summary>
+		public float realX, realY;
 		int targetX, targetY;
 
 		#region 配置
@@ -122,11 +123,12 @@ namespace DebugerModule.Data {
 			var state = getMoveState();
 
 			if (state == State.Panic) return;
-
-			velocity = speed;
-			runTime = 1 / speed;
+			
 			targetX = nextX;
 			targetY = nextY;
+
+			//velocity = direction ? speed : -speed;
+			//runTime = 1 / speed;
 
 			changeState(state);
 		}
@@ -153,17 +155,19 @@ namespace DebugerModule.Data {
 		/// <param name="x"></param>
 		/// <param name="y"></param>
 		public void syncPosition(float x, float y) {
+			Debug.Log(this + ". sync: " + x + ", target: " + targetX);
 
-			this.x = Mathf.FloorToInt(x);
-			this.y = Mathf.FloorToInt(y);
+			if (Mathf.Abs(targetX - x) <= 0.2f) this.x = targetX;
+			if (Mathf.Abs(targetY - y) <= 0.2f) this.y = targetY;
 
-			if (x == targetX) stop();
+			if (this.x == targetX && this.y == targetY) stop();
 		}
 
 		/// <summary>
 		/// 停止
 		/// </summary>
 		public void stop() {
+			realX = x; realY = y;
 			idleTime = velocity = 0;
 			changeState(State.Idle);
 		}
@@ -173,9 +177,23 @@ namespace DebugerModule.Data {
 		#region 更新
 
 		/// <summary>
+		/// 更新下落
+		/// </summary>
+		protected virtual void updateMoving() {
+			Debug.Log(this + ": " + x + ", target: " + targetX);
+			if (x == targetX) return;
+
+			var dt = Time.deltaTime;
+			var speed = direction ? this.speed : -this.speed;
+
+			realX += speed * dt;
+		}
+
+		/// <summary>
 		/// 更新待命
 		/// </summary>
 		protected override void _updateIdle() {
+			realX = x;
 			idleTime += Time.deltaTime;
 			if (idleTime >= frequency) move();
 		}
@@ -192,7 +210,6 @@ namespace DebugerModule.Data {
 		/// </summary>
 		protected virtual void _updateRunning() {
 			updateMoving();
-			Debug.Log(this + ": " + x + "," + y);
 		}
 
 		/// <summary>
@@ -207,14 +224,6 @@ namespace DebugerModule.Data {
 		/// </summary>
 		protected virtual void _updateFalling() {
 			updateMoving();
-		}
-
-		/// <summary>
-		/// 更新下落
-		/// </summary>
-		protected virtual void updateMoving() {
-			runTime -= Time.deltaTime;
-			if (runTime <= 0) stop();
 		}
 
 		/// <summary>

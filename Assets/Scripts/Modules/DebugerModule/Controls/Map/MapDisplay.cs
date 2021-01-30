@@ -126,6 +126,12 @@ namespace DebugerModule.Controls {
 		public Vector2 getGridPosition(Vector2 pos) {
 			return getGridPosition(pos.x, pos.y);
 		}
+		public Vector2 getGridCoord(float x, float y) {
+			return new Vector2(x - 0.5f + mapX / 2f, y - 0.5f + mapY / 2f);
+		}
+		public Vector2 getGridCoord(Vector2 pos) {
+			return getGridCoord(pos.x, pos.y);
+		}
 
 		/// <summary>
 		/// 获取战斗者实际位置
@@ -138,6 +144,12 @@ namespace DebugerModule.Controls {
 		}
 		public Vector2 getBattlerPosition(Vector2 pos) {
 			return getBattlerPosition(pos.x, pos.y);
+		}
+		public Vector2 getBattlerCoord(float x, float y) {
+			return new Vector2(x - 0.5f + mapX / 2f, y + mapY / 2f);
+		}
+		public Vector2 getBattlerCoord(Vector2 pos) {
+			return getBattlerCoord(pos.x, pos.y);
 		}
 
 		/// <summary>

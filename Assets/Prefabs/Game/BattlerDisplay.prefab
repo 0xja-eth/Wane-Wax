@@ -132,7 +132,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 4
+  m_Constraints: 5
 --- !u!95 &8324339219888355913
 Animator:
   serializedVersion: 3
@@ -178,7 +178,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 283ade7440f0bcf4aa55f15d005bac92, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  showDebug: 0
-  jumpForce: 3
+  showDebug: 1
+  jumpForce: 3.5
   playerAnimator: {fileID: 9100000, guid: e0f910bc69afdaa4589d9154d95e8105, type: 2}
   enemyAnimator: {fileID: 22100000, guid: c77b4e24ae61abe438912cd4ae239993, type: 2}
