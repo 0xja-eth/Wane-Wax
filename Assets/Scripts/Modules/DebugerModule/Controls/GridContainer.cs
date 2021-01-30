@@ -28,8 +28,8 @@ namespace DebugerModule.Controls {
 		public int mapX => mapDisplay.mapX;
 		public int mapY => mapDisplay.mapY;
 
-		#region 数据
-
+		#region 绘制
+		
 		/// <summary>
 		/// 获取实际位置
 		/// </summary>
@@ -37,12 +37,8 @@ namespace DebugerModule.Controls {
 		/// <param name="y"></param>
 		/// <returns></returns>
 		public Vector2 getPosition(int x, int y) {
-			return new Vector2(x - mapX / 2f + 0.5f, y - mapY / 2f + 0.5f);
+			return mapDisplay.getPosition(x, y);
 		}
-
-		#endregion
-
-		#region 绘制
 
 		/// <summary>
 		/// Sub创建
@@ -52,7 +48,8 @@ namespace DebugerModule.Controls {
 			var display = sub as GridDisplay;
 			if (display == null) return;
 
-			var grid = items[index];
+			// 因为他是创建之后再对里面的物品进行赋值
+			var grid = items[index]; 
 			var pos = getPosition(grid.x, grid.y);
 
 			display.mapDisplay = mapDisplay;

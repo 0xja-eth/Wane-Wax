@@ -18,8 +18,8 @@ namespace DebugerModule.Controls {
 		/// <summary>
 		/// 外部变量设置
 		/// </summary>
-		public int PlayerLayer = 8;
-		public int EnemyLayer = 9;
+		//public const int PlayerLayer = 8;
+		//public const int EnemyLayer = 9;
 
 		/// <summary>
 		/// 外部组件设置

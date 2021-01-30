@@ -21,7 +21,21 @@ namespace DebugerModule.Controls {
 		[RequireTarget]
 		protected LineRenderer lineRenderer;
 
+		/// <summary>
+		/// 内部组件设置
+		/// </summary>
+		public MapDisplay mapDisplay { get; set; }
+
 		#region 绘制
+
+		/// <summary>
+		/// 获取实际座标
+		/// </summary>
+		/// <param name="pos"></param>
+		/// <returns></returns>
+		public Vector2 getPosition(Vector2 pos) {
+			return mapDisplay.getPosition(pos);
+		}
 
 		/// <summary>
 		/// 绘制线条
@@ -38,8 +52,10 @@ namespace DebugerModule.Controls {
 
 			lineRenderer.positionCount = points.Count;
 
-			for (var i = 0; i < points.Count; ++i)
-				lineRenderer.SetPosition(i, points[i]);
+			for (var i = 0; i < points.Count; ++i) {
+				var pos = getPosition(points[i]);
+				lineRenderer.SetPosition(i, pos);
+			}
 		}
 
 		#endregion

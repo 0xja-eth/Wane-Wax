@@ -62,15 +62,25 @@ namespace DebugerModule.Controls {
 			public Line(Vector2 p1, Vector2 p2) {
 				this.p1 = p1; this.p2 = p2;
 			}
+
+			/// <summary>
+			/// ToString
+			/// </summary>
+			/// <returns></returns>
+			public override string ToString() {
+				return "(" + p1 + ", " + p2 + ")";
+			}
 		}
 
 		/// <summary>
 		/// 内部组件设置
 		/// </summary>
 		[RequireTarget]
-		protected GridContainer gridContainer;
+		[HideInInspector]
+		public GridContainer gridContainer;
 		[RequireTarget]
-		protected MapLineContainer linesContainer;
+		[HideInInspector]
+		public MapLineContainer linesContainer;
 
 		/// <summary>
 		/// 地图尺寸
@@ -85,6 +95,19 @@ namespace DebugerModule.Controls {
 		List<List<Line>> paintableLines = new List<List<Line>>();
 
 		#region 数据
+		
+		/// <summary>
+		/// 获取实际位置
+		/// </summary>
+		/// <param name="x"></param>
+		/// <param name="y"></param>
+		/// <returns></returns>
+		public Vector2 getPosition(float x, float y) {
+			return new Vector2(x - mapX / 2f + 0.5f, y - mapY / 2f + 0.5f);
+		}
+		public Vector2 getPosition(Vector2 pos) {
+			return getPosition(pos.x, pos.y);
+		}
 
 		/// <summary>
 		/// 地图改变
@@ -121,20 +144,24 @@ namespace DebugerModule.Controls {
 						var p1 = grid.point(Grid.Direction.LD);
 						var p2 = grid.point(Grid.Direction.RD);
 						rawLines.Add(new Line(p1, p2));
+						break;
 					}
+					lastGrid = grid;
 				}
 			}
 
 			// 由左至右扫描
 			for (int y = 0; y < mapY; ++y) {
-				lastGrid = new Grid(y, 0);
+				lastGrid = new Grid(0, y, item);
 				for (int x = 0; x < mapX; ++x) {
 					var grid = item.getGrid(x, y);
 					if (grid.belong != lastGrid.belong) {
 						var p1 = grid.point(Grid.Direction.LD);
 						var p2 = grid.point(Grid.Direction.LU);
 						rawLines.Add(new Line(p1, p2));
+						break;
 					}
+					lastGrid = grid;
 				}
 			}
 		}
@@ -144,11 +171,13 @@ namespace DebugerModule.Controls {
 		/// </summary>
 		void makePaintableLines() {
 			// 从中点扫描
-			makePaintableLines(new Vector2(0, mapY >> 1));
+			makePaintableLines(new Vector2(-0.5f, (mapY >> 1) - 0.5f));
 
 			// 扫描剩余线条
 			foreach (var line in rawLines) {
 				if (line.flag) continue; // 遍历过
+
+				line.flag = true;
 				makePaintableLines(line.p1);
 			}
 		}
