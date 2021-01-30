@@ -27,6 +27,12 @@ namespace DebugerModule.Data {
 		public override bool initDir => false;
 
 		/// <summary>
+		/// 跳跃计算
+		/// </summary>
+		protected override float jumpY => -base.jumpY;
+		protected override float fallY => -base.fallY;
+
+		/// <summary>
 		/// 初始化
 		/// </summary>
 		public RuntimeEnemy() { }

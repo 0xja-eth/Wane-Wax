@@ -53,7 +53,14 @@ namespace DebugerModule.Data {
 		/// <summary>
 		/// 下一个坐标墙高度
 		/// </summary>
-		public int nextWall => map.judgeWall(nextX, y, belong);
+		int _nextWall = 999;
+		public int nextWall {
+			get {
+				if (_nextWall == 999)
+					_nextWall = map.judgeWall(nextX, y, belong);
+				return _nextWall;
+			}
+		}
 
 		/// <summary>
 		/// 归属
@@ -120,15 +127,13 @@ namespace DebugerModule.Data {
 		/// 向前移动
 		/// </summary>
 		public void move() {
+			idleTime = 0;
+
 			var state = getMoveState();
 
 			if (state == State.Panic) return;
 			
-			targetX = nextX;
-			targetY = nextY;
-
-			//velocity = direction ? speed : -speed;
-			//runTime = 1 / speed;
+			targetX = nextX; targetY = nextY;
 
 			changeState(state);
 		}
@@ -149,28 +154,49 @@ namespace DebugerModule.Data {
 			}
 		}
 
-		/// <summary>
-		/// 同步位置
-		/// </summary>
-		/// <param name="x"></param>
-		/// <param name="y"></param>
-		public void syncPosition(float x, float y) {
-			Debug.Log(this + ". sync: " + x + ", target: " + targetX);
+		///// <summary>
+		///// 同步位置
+		///// </summary>
+		///// <param name="x"></param>
+		///// <param name="y"></param>
+		//public void syncPosition(float x, float y) {
+		//	Debug.Log(this + ". sync: " + x + ", target: " + targetX);
 
-			if (Mathf.Abs(targetX - x) <= 0.2f) this.x = targetX;
-			if (Mathf.Abs(targetY - y) <= 0.2f) this.y = targetY;
+		//	if (Mathf.Abs(targetX - x) <= 0.2f) this.x = targetX;
+		//	if (Mathf.Abs(targetY - y) <= 0.2f) this.y = targetY;
 
-			if (this.x == targetX && this.y == targetY) stop();
-		}
+		//	if (this.x == targetX && this.y == targetY) stop();
+		//}
 
 		/// <summary>
 		/// 停止
 		/// </summary>
 		public void stop() {
-			realX = x; realY = y;
-			idleTime = velocity = 0;
+			runTime = 0;
+			_nextWall = 999;
+			realX = x = targetX;
+			realY = y = targetY;
+
 			changeState(State.Idle);
 		}
+
+		#endregion
+
+		#region 跳跃计算
+
+		/// <summary>
+		/// 因数
+		/// </summary>
+		float moveFT => 1 / speed; // 移动因数 T
+
+		float jumpFA => -35 * speed * speed / 6; // -35/6t^2, t = 1/speed
+		float jumpFB => 41 * speed / 6; // 41/6t, t = 1/speed
+
+		float fallFH => -nextWall; // -h/t^2
+		float fallFA => -fallFH * speed * speed; // -h/t^2
+
+		protected virtual float jumpY => jumpFA * runTime * runTime + jumpFB * runTime;
+		protected virtual float fallY => fallFA * runTime * runTime;
 
 		#endregion
 
@@ -180,13 +206,17 @@ namespace DebugerModule.Data {
 		/// 更新下落
 		/// </summary>
 		protected virtual void updateMoving() {
-			Debug.Log(this + ": " + x + ", target: " + targetX);
-			if (x == targetX) return;
+			runTime += Time.deltaTime;
+			if (runTime >= moveFT) stop();
+			else realX += speed * Time.deltaTime;
 
-			var dt = Time.deltaTime;
-			var speed = direction ? this.speed : -this.speed;
+			//Debug.Log(this + ": " + x + ", target: " + targetX);
+			//if (x == targetX) return;
 
-			realX += speed * dt;
+			//var dt = Time.deltaTime;
+			//var speed = direction ? this.speed : -this.speed;
+
+			//realX += speed * dt;
 		}
 
 		/// <summary>
@@ -216,14 +246,14 @@ namespace DebugerModule.Data {
 		/// 更新爬升
 		/// </summary>
 		protected virtual void _updateJumping() {
-			updateMoving();
+			realY = y + jumpY; updateMoving();
 		}
 
 		/// <summary>
 		/// 更新下落
 		/// </summary>
 		protected virtual void _updateFalling() {
-			updateMoving();
+			realY = y + fallY; updateMoving();
 		}
 
 		/// <summary>

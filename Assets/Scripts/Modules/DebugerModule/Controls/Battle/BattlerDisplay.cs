@@ -14,7 +14,7 @@ namespace DebugerModule.Controls {
 	/// <summary>
 	/// 地图显示
 	/// </summary>
-	[RequireComponent(typeof(Rigidbody2D))]
+	//[RequireComponent(typeof(Rigidbody2D))]
 	[RequireComponent(typeof(SpriteRenderer))]
 	[RequireComponent(typeof(AnimatorExtend))]
 	public class BattlerDisplay : ItemDisplay<RuntimeBattler> {
@@ -41,8 +41,8 @@ namespace DebugerModule.Controls {
 		/// </summary>
 		[RequireTarget]
 		protected SpriteRenderer sprite;
-		[RequireTarget]
-		protected new Rigidbody2D rigidbody;
+		//[RequireTarget]
+		//protected new Rigidbody2D rigidbody;
 		[RequireTarget]
 		protected AnimatorExtend animator;
 
@@ -110,8 +110,8 @@ namespace DebugerModule.Controls {
 		/// 跳跃
 		/// </summary>
 		void _enterJumping() {
-			var force = isEnemy ? -jumpForce : jumpForce;
-			rigidbody.AddForce(new Vector2(0, force), ForceMode2D.Impulse);
+			//var force = isEnemy ? -jumpForce : jumpForce;
+			//rigidbody.AddForce(new Vector2(0, force), ForceMode2D.Impulse);
 		}
 
 		/// <summary>
@@ -120,14 +120,17 @@ namespace DebugerModule.Controls {
 		void updatePosition() {
 			if (!item.isMoving) return;
 
-			var rx = item.realX + 0.5f - mapX/2;
-			var pos = transform.position; pos.x = rx;
+			var rx = item.realX + 0.5f - mapX / 2;
+			var ry = item.realY - mapY / 2;
+
+			var pos = transform.position;
+			pos.x = rx; pos.y = ry;
 
 			transform.position = pos;
 
-			var ry = pos.y + mapY / 2;
+			//var ry = pos.y + mapY / 2;
 
-			item.syncPosition(item.realX, ry);
+			//item.syncPosition(item.realX, ry);
 			
 			//var pos = transform.position;
 			//pos = mapDisplay.getBattlerCoord(pos);
@@ -139,8 +142,8 @@ namespace DebugerModule.Controls {
 		/// 重力
 		/// </summary>
 		void updateGravity() {
-			if (!isEnemy) return;
-			rigidbody.AddForce(new Vector2(0, 5f * 2), ForceMode2D.Impulse);
+			//if (!isEnemy) return;
+			//rigidbody.AddForce(new Vector2(0, 5f * 2), ForceMode2D.Impulse);
 		}
 
 		#endregion
