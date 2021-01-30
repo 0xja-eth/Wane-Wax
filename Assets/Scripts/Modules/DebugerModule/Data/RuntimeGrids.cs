@@ -34,7 +34,9 @@ namespace DebugerModule.Data {
 		/// <summary>
 		/// 方块组实例
 		/// </summary>
-		public Grids grids => DataService.Get().get<Grids>(gridsId);
+		//public Grids grids => DataService.Get().get<Grids>(gridsId);
+		public Grids grids => gridsId < Grids.GridsSet.Length ? 
+			Grids.GridsSet[gridsId] : null;
 
 		/// <summary>
 		/// 实际方块

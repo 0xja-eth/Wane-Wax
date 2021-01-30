@@ -85,6 +85,18 @@ namespace DebugerModule.Data {
 			(y >= mapY >> 1 ? Belong.Player : Belong.Enemy);
 
 		/// <summary>
+		/// 归属状态
+		/// </summary>
+		public bool isPlayer => belong == Belong.Player;
+		public bool isEnemy => belong == Belong.Enemy;
+
+		/// <summary>
+		/// 区域状态
+		/// </summary>
+		public bool isPlayerPos => posBelong == Belong.Player;
+		public bool isEnemyPos => posBelong == Belong.Enemy;
+
+		/// <summary>
 		/// 配置
 		/// </summary>
 		/// <param name="x"></param>

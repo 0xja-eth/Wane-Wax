@@ -16,6 +16,13 @@ namespace DebugerModule.Data {
 	public class Grids : BaseItem {
 
 		/// <summary>
+		/// 格子组合数据库
+		/// </summary>
+		public static readonly Grids[] GridsSet = new Grids[] {
+			new Grids("1")
+		};
+
+		/// <summary>
 		/// 属性
 		/// </summary>
 		[AutoConvert]

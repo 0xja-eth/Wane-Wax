@@ -35,6 +35,7 @@ namespace DebugerModule.Components {
 			foreach(var line in lines) {
 				points.Add(line.p1); points.Add(line.p2);
 			}
+
 			lineRenderer.positionCount = points.Count;
 
 			for (var i = 0; i < points.Count; ++i)
