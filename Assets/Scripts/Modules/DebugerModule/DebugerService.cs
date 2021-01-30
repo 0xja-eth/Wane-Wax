@@ -118,9 +118,9 @@ namespace DebugerModule.Services {
 		/// 更新
 		/// </summary>
 		protected override void updateOthers() {
+			base.updateOthers();
 			updateMap();
 			updateBattlers();
-			base.updateOthers();
 		}
 
 		/// <summary>

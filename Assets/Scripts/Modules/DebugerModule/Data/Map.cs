@@ -70,6 +70,11 @@ namespace DebugerModule.Data {
 		#region 格子放置
 
 		/// <summary>
+		/// 预览位置
+		/// </summary>
+		List<Vector2> previewPos = new List<Vector2>();
+
+		/// <summary>
 		/// 放置格子
 		/// </summary>
 		/// <param name="grids">格子组</param>
@@ -90,7 +95,7 @@ namespace DebugerModule.Data {
 				var ry = grid.y + offsetY;
 
 				if (preview && getGrid(rx, ry) != null)
-					getGrid(rx, ry).preview = true;
+					previewPos.Add(new Vector2(rx, ry));
 				else {
 					changeGrid(rx, ry, grids.belong);
 					changeGrid(rx, ry, newGridType());
@@ -170,14 +175,23 @@ namespace DebugerModule.Data {
 		/// </summary>
 		public void update() {
 			updateGrids();
+			updatePlacingGrids();
 		}
 
 		/// <summary>
 		/// 更新格子状态
 		/// </summary>
 		void updateGrids() {
-			foreach(var grid in grids) 
-				grid.preview = false;
+			foreach(var grid in grids) grid.preview = false;
+		}
+
+		/// <summary>
+		/// 更新放置
+		/// </summary>
+		void updatePlacingGrids() {
+			foreach(var pos in previewPos) 
+				getGrid((int)pos.x, (int)pos.y).preview = true;
+			previewPos.Clear();
 		}
 
 		/// <summary>
