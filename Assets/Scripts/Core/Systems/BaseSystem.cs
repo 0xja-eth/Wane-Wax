@@ -22,6 +22,7 @@ namespace Core.Systems {
 		/// <param name="type"></param>
 		/// <returns></returns>
 		public static BaseSystem getSystemInstance(Type type) {
+			if (type.IsAbstract || type.IsGenericType) return null;
 			var getFunc = type.GetMethod("Get",
 				ReflectionUtils.DefaultStaticFlags);
 			return getFunc.Invoke(null, null) as BaseSystem;

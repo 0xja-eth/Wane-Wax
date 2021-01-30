@@ -274,7 +274,7 @@ namespace Core.Utils {
 			string namespace_, Type parent, Type attrType) {
 			bool res = (type != null && !type.IsAbstract);
 
-			if (parent == null)
+			if (parent != null)
 				if (parent.IsInterface) // 接口
 					res = res && type.GetInterfaces().Contains(parent);
 				else if (parent.IsClass) // 类
@@ -283,7 +283,7 @@ namespace Core.Utils {
 			if (attrType != null)
 				res = res && type.GetCustomAttribute(attrType) != null;
 
-			if (namespace_ == null)
+			if (namespace_ != null)
 				res = res && type.Namespace == namespace_;
 
 			return res;

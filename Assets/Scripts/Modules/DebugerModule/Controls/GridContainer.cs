@@ -52,7 +52,7 @@ namespace DebugerModule.Controls {
 			var display = sub as GridDisplay;
 			if (display == null) return;
 
-			var grid = display.getItem();
+			var grid = items[index];
 			var pos = getPosition(grid.x, grid.y);
 
 			display.mapDisplay = mapDisplay;

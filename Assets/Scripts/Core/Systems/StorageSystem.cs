@@ -141,6 +141,7 @@ namespace Core.Systems {
 		/// <param name="type"></param>
 		void processSystemCacheItem(Type type) {
 			var sys = getSystemInstance(type);
+			if (sys == null) return;
 
 			ReflectionUtils.processAttribute<PropertyInfo, CacheItem>(
 				type, (prop, cache) => {
