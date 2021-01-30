@@ -39,6 +39,12 @@ namespace DebugerModule.Data {
 			Grids.GridsSet[gridsId] : null;
 
 		/// <summary>
+		/// 归属状态
+		/// </summary>
+		public bool isPlayer => operer == Grid.Belong.Player;
+		public bool isEnemy => operer == Grid.Belong.Enemy;
+
+		/// <summary>
 		/// 实际方块
 		/// </summary>
 		List<Grid> _realGrids;

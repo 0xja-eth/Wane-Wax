@@ -6,6 +6,7 @@ using Core.Components;
 
 using DebugerModule;
 using DebugerModule.Controls;
+using DebugerModule.Services;
 using DebugerModule.Data;
 
 namespace Scenes.GameScene {
@@ -21,20 +22,14 @@ namespace Scenes.GameScene {
 		public MapDisplay mapDisplay;
 
 		/// <summary>
-		/// 内部变量定义
+		/// 服务
 		/// </summary>
-		Map currentMap;
+		DebugerService debugSer;
 
 		/// <summary>
-		/// 初始化
+		/// 当前地图
 		/// </summary>
-		protected override void initializeOnce() {
-			base.initializeOnce();
-			var mapX = DebugerConfig.MapX;
-			var mapY = DebugerConfig.MapY;
-
-			currentMap = new Map(mapX, mapY);
-		}
+		Map currentMap => debugSer.currentMap;
 
 		/// <summary>
 		/// 开始
@@ -42,7 +37,16 @@ namespace Scenes.GameScene {
 		protected override void start() {
 			base.start();
 
+			debugSer.start();
 			mapDisplay.setItem(currentMap);
+		}
+
+		/// <summary>
+		/// 更新
+		/// </summary>
+		protected override void update() {
+			base.update();
+			debugSer.update();
 		}
 	}
 }
