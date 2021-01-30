@@ -39,6 +39,11 @@ namespace DebugerModule.Controls {
 
 		public MapDisplay mapDisplay { get; set; }
 
+		/// <summary>
+		/// 内部变量定义
+		/// </summary>
+		RuntimeBattler lastItem;
+
 		#region 更新
 
 		/// <summary>
@@ -47,8 +52,8 @@ namespace DebugerModule.Controls {
 		protected override void update() {
 			base.update();
 			if (item == null) return;
+
 			updateState();
-			updateMoving();
 			updateDirection();
 			updateVelocity();
 		}
@@ -58,16 +63,6 @@ namespace DebugerModule.Controls {
 		/// </summary>
 		void updateState() {
 			animator.setVar(item.state);
-		}
-
-		/// <summary>
-		/// 更新移动
-		/// </summary>
-		void updateMoving() {
-			if (!item.isMoving) return;
-
-			if (item.isJumping)
-				rigidbody.AddForce(new Vector2(0, jumpForce));
 		}
 
 		/// <summary>
@@ -87,6 +82,13 @@ namespace DebugerModule.Controls {
 			drawDirection(item);
 		}
 
+		/// <summary>
+		/// 跳跃
+		/// </summary>
+		void _enterJumping() {
+			rigidbody.AddForce(new Vector2(0, jumpForce));
+		}
+
 		#endregion
 
 		#region 数据
@@ -96,8 +98,10 @@ namespace DebugerModule.Controls {
 		/// </summary>
 		protected override void onItemChanged() {
 			base.onItemChanged();
-			if (item == null) return;
+			lastItem?.stateMachine.removeObject(this);
+			item?.stateMachine.registerObject(this);
 
+			lastItem = item;
 		}
 
 		#endregion
