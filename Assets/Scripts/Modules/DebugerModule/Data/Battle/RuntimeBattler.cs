@@ -236,6 +236,11 @@ namespace DebugerModule.Data {
 		}
 
 		/// <summary>
+		/// 受伤
+		/// </summary>
+		public bool isHurtting => !map.judgePosBelong(x, y, belong);
+
+		/// <summary>
 		/// 更新任意状态
 		/// </summary>
 		protected override void updateAnyState() {

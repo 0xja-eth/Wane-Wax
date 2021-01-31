@@ -264,6 +264,32 @@ namespace DebugerModule.Data {
 		}
 
 		/// <summary>
+		/// 向前一步
+		/// </summary>
+		/// <param name="x"></param>
+		/// <param name="dir"></param>
+		/// <returns></returns>
+		public int forward(int x, bool dir) {
+			if (dir) x++; else x--;
+			x = (mapX + x) % mapX;
+			return x;
+		}
+
+		/// <summary>
+		/// 寻找穿透的地板
+		/// </summary>
+		/// <param name="x"></param>
+		/// <param name="belong"></param>
+		/// <returns></returns>
+		public int findThrough(int x, bool direction, Grid.Belong belong) {
+			for(int xx = x; xx != x; xx = forward(xx, direction)) {
+				var grid = getGrid(x, mapY - 1);
+				if (grid.belong == belong) return xx;
+			}
+			return -1;
+		}
+
+		/// <summary>
 		/// 获取坠落高度
 		/// </summary>
 		/// <returns></returns>

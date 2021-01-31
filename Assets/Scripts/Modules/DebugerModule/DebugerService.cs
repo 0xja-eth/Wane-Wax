@@ -102,7 +102,9 @@ namespace DebugerModule.Services {
 			result = Result.None; score = 0;
 			aiTime = clearTime = fallTime = 0;
 
-			aiSpeed = 1.5f; clearSpeed = 10; fallSpeed = 1.5f;
+			aiSpeed = 1.5f;
+			clearSpeed = 10;
+			fallSpeed = 1.5f;
 		}
 
 		/// <summary>
@@ -206,9 +208,9 @@ namespace DebugerModule.Services {
 		/// 添加速度
 		/// </summary>
 		void updateSpeed() {
-			if (aiSpeed > 0.1f) aiSpeed -= 0.001f;
+			if (aiSpeed > 0.25f) aiSpeed -= 0.002f;
 			if (clearSpeed > 5) clearSpeed -= 0.002f;
-			if (fallSpeed > 0.5f) fallSpeed -= 0.002f;
+			if (fallSpeed > 1) fallSpeed -= 0.002f;
 		}
 
 		/// <summary>
@@ -256,8 +258,11 @@ namespace DebugerModule.Services {
 			}
 
 			aiTime += Time.deltaTime;
+			freezeTime2 += Time.deltaTime;
+
 			if (aiTime >= aiSpeed) {
-				var targetX = currentMap.actor.nextX;
+
+				var targetX = findTargetX();
 				var dist = targetX - fallingX2;
 
 				if (dist > 0) fallingX2++;
@@ -268,8 +273,11 @@ namespace DebugerModule.Services {
 
 				aiTime = 0;
 
-				if (fallingX2 == targetX)
+
+				if (fallingX2 == targetX && freezeTime2 >= freezeDuration / 2) {
 					placeGrids(enemyGrids, fallingX2);
+					freezeTime2 = 0;
+				}
 			}
 
 			if (enemyGrids == null) return;
@@ -279,6 +287,30 @@ namespace DebugerModule.Services {
 				placeGrids(enemyGrids, fallingX2, fallingY2);
 			else
 				placeGrids(enemyGrids, fallingX2, fallingY2, true);
+		}
+
+		/// <summary>
+		/// 寻找目标X
+		/// </summary>
+		int findTargetX() {
+			var enemy = currentMap.enemies[0];
+
+			var playerNX = currentMap.actor.nextX;
+
+			var enemyX = enemy.x;
+			var enemyNX = enemy.nextX;
+			var enemyWall = enemy.nextWall;
+
+			var throughX = currentMap.findThrough(enemyX, enemy.direction, enemy.belong);
+
+			if (throughX >= 0) return throughX;
+
+			if (enemy.isHurtting) return enemyX;
+
+			if (enemyWall < -2) return enemyNX; // 出现沟壑
+			if (enemyWall >= 2) return enemyX;
+
+			return playerNX;
 		}
 
 		/// <summary>
@@ -300,14 +332,25 @@ namespace DebugerModule.Services {
 		int fallingX2, fallingY2;
 
 		/// <summary>
+		/// 降落
+		/// </summary>
+		float freezeTime = 0;
+		float freezeTime2 = 0;
+		public float freezeDuration = 2.5f;
+
+		/// <summary>
 		/// 更新输入
 		/// </summary>
 		void updateInputting() {
-			//freezeTime += Time.deltaTime;
-			//if (freezeTime >= freezeDuration) {
+			freezeTime += Time.deltaTime;
 
-			//	//var ver = Input.GetAxisRaw("Vertical");
-			//}
+			var down = false;
+			if (freezeTime >= freezeDuration) {
+				down = InputUtils.getKeyDown(KeyCode.DownArrow, KeyCode.S);
+				if (down) freezeTime = 0;
+				//var ver = Input.GetAxisRaw("Vertical");
+			}
+
 			bool left = InputUtils.getKeyDown(KeyCode.LeftArrow, KeyCode.A);
 			bool right = InputUtils.getKeyDown(KeyCode.RightArrow, KeyCode.R);
 
@@ -316,7 +359,6 @@ namespace DebugerModule.Services {
 
 			var w = currentMap.mapX; fallingX = (w + fallingX) % w;
 
-			var down = InputUtils.getKeyDown(KeyCode.DownArrow, KeyCode.S);
 			var rotate = InputUtils.getKeyDown(KeyCode.UpArrow, KeyCode.W, KeyCode.Space);
 
 			if (rotate) currentGrids.rotate();
