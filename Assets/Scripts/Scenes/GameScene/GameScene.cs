@@ -50,8 +50,8 @@ namespace Scenes.GameScene {
 		/// </summary>
 		protected override void update() {
 			base.update();
-			if (debugSer.pause || debugSer.isResult)
-				debugSer.update();
+			//if (!debugSer.pause || debugSer.isResult)
+			debugSer.update();
 
 			updateResult(); updateUI();
 		}
