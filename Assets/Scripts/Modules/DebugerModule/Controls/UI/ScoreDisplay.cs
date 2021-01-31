@@ -31,5 +31,12 @@ namespace DebugerModule.Controls {
 			base.drawExactlyValue(data);
 			score.text = data.ToString();
 		}
+
+		///// <summary>
+		///// 绘制空值
+		///// </summary>
+		//protected override void drawEmptyValue() {
+		//	base.drawEmptyValue(); score.text = "0";
+		//}
 	}
 }

@@ -67,7 +67,7 @@ namespace Scenes.GameScene {
 		void updateUI() {
 			if (currentMap == null) return;
 
-			scoreDisplay.setValue(debugSer.score);
+			scoreDisplay.score.text = debugSer.score.ToString();
 
 			playerLife.setValue(currentMap.actor);
 			enemyLife.setValue(currentMap.enemies[0]);
@@ -93,7 +93,7 @@ namespace Scenes.GameScene {
 		void updateWin() {
 			if (resultFlag) return;
 
-			winScore.setValue(debugSer.score);
+			winScore.score.text = debugSer.score.ToString();
 
 			winResult.gameObject.SetActive(true);
 			winResult.Play(resultAni);
@@ -107,13 +107,14 @@ namespace Scenes.GameScene {
 		void updateLose() {
 			if (resultFlag) return;
 
-			loseScore.setValue(debugSer.score);
-
 			if (cameraAni.IsPlaying(rotateAni)) return;
 			if (rotateFlag) {
-				resultFlag = true;
+				loseScore.score.text = debugSer.score.ToString();
+
 				loseResult.gameObject.SetActive(true);
 				loseResult.Play(resultAni);
+
+				resultFlag = true;
 			} else {
 				rotateFlag = true; cameraAni.Play(rotateAni);
 			}
