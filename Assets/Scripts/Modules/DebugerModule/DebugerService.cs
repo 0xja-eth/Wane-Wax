@@ -84,6 +84,7 @@ namespace DebugerModule.Services {
 		/// 游戏开始
 		/// </summary>
 		public void start() {
+			clearStates();
 			changeState(State.Start);
 
 			var mapX = DebugerConfig.MapX;
@@ -92,6 +93,16 @@ namespace DebugerModule.Services {
 			currentMap = new Map(mapX, mapY);
 			currentMap.addActor();
 			currentMap.addEnemy();
+		}
+
+		/// <summary>
+		/// 清空状态
+		/// </summary>
+		public void clearStates() {
+			result = Result.None; score = 0;
+			aiTime = clearTime = fallTime = 0;
+
+			aiSpeed = 1.5f; clearSpeed = 10; fallSpeed = 1.5f;
 		}
 
 		/// <summary>
@@ -196,7 +207,7 @@ namespace DebugerModule.Services {
 		/// </summary>
 		void updateSpeed() {
 			if (aiSpeed > 0.1f) aiSpeed -= 0.001f;
-			if (clearSpeed > 3) clearSpeed -= 0.002f;
+			if (clearSpeed > 5) clearSpeed -= 0.002f;
 			if (fallSpeed > 0.5f) fallSpeed -= 0.002f;
 		}
 
@@ -229,11 +240,11 @@ namespace DebugerModule.Services {
 		}
 
 		// TODO: 封装 AI 模块
-		float placeTime = 0;
-		public float aiSpeed { get; protected set; } = 1; // 放置速度 s/个
+		float aiTime = 0;
+		public float aiSpeed { get; protected set; } // 放置速度 s/个
 
 		float clearTime = 0;
-		public float clearSpeed { get; protected set; } = 7; // 清除速度 s/个
+		public float clearSpeed { get; protected set; } // 清除速度 s/个
 
 		/// <summary>
 		/// 更新敌人
@@ -244,8 +255,8 @@ namespace DebugerModule.Services {
 				fallingY2 = 0;
 			}
 
-			placeTime += Time.deltaTime;
-			if (placeTime >= aiSpeed) {
+			aiTime += Time.deltaTime;
+			if (aiTime >= aiSpeed) {
 				var targetX = currentMap.actor.nextX;
 				var dist = targetX - fallingX2;
 
@@ -255,7 +266,7 @@ namespace DebugerModule.Services {
 				var w = currentMap.mapX;
 				fallingX2 = (w + fallingX2) % w;
 
-				placeTime = 0;
+				aiTime = 0;
 
 				if (fallingX2 == targetX)
 					placeGrids(enemyGrids, fallingX2);
@@ -276,11 +287,11 @@ namespace DebugerModule.Services {
 		void updateClearLines() {
 			clearTime += Time.deltaTime;
 			if (clearTime >= clearSpeed) {
-				var rand = Random.Range(0f, 1f);
-				if (rand > 0.5f)
-					currentMap.clearLines(currentMap.mapY >> 1);
-				else
-					currentMap.clearLines((currentMap.mapY >> 1) - 1);
+				//var rand = Random.Range(0f, 1f);
+				//if (rand > 0.5f)
+				currentMap.clearLines(currentMap.mapY >> 1);
+				//else
+				currentMap.clearLines((currentMap.mapY >> 1) - 1);
 				clearTime = 0;
 			}
 		}
@@ -313,7 +324,7 @@ namespace DebugerModule.Services {
 		/// 降落
 		/// </summary>
 		float fallTime = 0;
-		public float fallSpeed { get; protected set; } = 1.5f; // 放置速度 s/格
+		public float fallSpeed { get; protected set; } // 放置速度 s/格
 
 		/// <summary>
 		/// 更新降落
