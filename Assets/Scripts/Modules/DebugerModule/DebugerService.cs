@@ -76,8 +76,8 @@ namespace DebugerModule.Services {
 		/// 有结果
 		/// </summary>
 		public bool isResult => result != Result.None;
-		public bool isWin => result != Result.Win;
-		public bool isLose => result != Result.Lose;
+		public bool isWin => result == Result.Win;
+		public bool isLose => result == Result.Lose;
 
 		/// <summary>
 		/// 游戏开始
@@ -159,6 +159,8 @@ namespace DebugerModule.Services {
 			updateEnemy();
 			updateClearLines();
 
+			updateResult();
+
 			updateSpeed();
 			updateScore();
 		}
@@ -184,6 +186,8 @@ namespace DebugerModule.Services {
 		void updateResult() {
 			if (currentMap.isActorLost) result = Result.Lose;
 			else if (currentMap.isEnemiesLost) result = Result.Win;
+
+			if (isResult) changeState(State.Result);
 		}
 
 		/// <summary>

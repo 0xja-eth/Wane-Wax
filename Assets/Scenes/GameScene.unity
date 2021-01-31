@@ -977,7 +977,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 60, y: -48.000023}
+  m_AnchoredPosition: {x: 60, y: -48.00003}
   m_SizeDelta: {x: 72, y: 72}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &943912071
@@ -2449,8 +2449,8 @@ MonoBehaviour:
   bgmClip: {fileID: 0}
   mapDisplay: {fileID: 498087733}
   scoreDisplay: {fileID: 1109837896}
-  playerLife: {fileID: 0}
-  enemyLife: {fileID: 0}
+  playerLife: {fileID: 654987361}
+  enemyLife: {fileID: 2093352498}
 --- !u!224 &3258657681524416606
 RectTransform:
   m_ObjectHideFlags: 0

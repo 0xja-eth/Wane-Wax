@@ -60,6 +60,8 @@ namespace Scenes.GameScene {
 		/// 更新UI
 		/// </summary>
 		void updateUI() {
+			if (currentMap == null) return;
+
 			scoreDisplay.setValue(debugSer.score);
 
 			playerLife.setValue(currentMap.actor);
