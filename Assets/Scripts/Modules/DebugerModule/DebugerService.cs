@@ -39,16 +39,45 @@ namespace DebugerModule.Services {
 			Result // 结果
 		}
 
+		/// <summary>
+		/// 结果
+		/// </summary>
+		public enum Result {
+			None, Win, Lose
+		}
+
+		/// <summary>
+		/// 结果
+		/// </summary>
+		public Result result = Result.None;
+
 		#region 初始化
 
 		/// <summary>
 		/// 状态类型
 		/// </summary>
-		protected override Type stateType => typeof(State); 
+		protected override Type stateType => typeof(State);
 
 		#endregion
 
 		#region 游戏控制
+
+		/// <summary>
+		/// 暂停游戏
+		/// </summary>
+		public bool pause { get; set; }
+
+		/// <summary>
+		/// 分数
+		/// </summary>
+		public int score { get; set; }
+
+		/// <summary>
+		/// 有结果
+		/// </summary>
+		public bool isResult => result != Result.None;
+		public bool isWin => result != Result.Win;
+		public bool isLose => result != Result.Lose;
 
 		/// <summary>
 		/// 游戏开始
@@ -122,9 +151,39 @@ namespace DebugerModule.Services {
 		/// 更新
 		/// </summary>
 		protected override void updateOthers() {
+			if (pause || isResult) return;
+
 			base.updateOthers();
-			updateMap(); updateEnemy();
+
+			updateMap();
+			updateEnemy();
 			updateClearLines();
+
+			updateSpeed();
+			updateScore();
+		}
+
+		/// <summary>
+		/// 添加速度
+		/// </summary>
+		void updateSpeed() {
+			if (aiSpeed > 1) aiSpeed -= 0.001f;
+			if (clearSpeed > 3) clearSpeed -= 0.001f;
+		}
+
+		/// <summary>
+		/// 添加分数
+		/// </summary>
+		void updateScore() {
+			score += (int)Mathf.Round(1 / aiSpeed * 3);
+		}
+
+		/// <summary>
+		/// 更新结果
+		/// </summary>
+		void updateResult() {
+			if (currentMap.isActorLost) result = Result.Lose;
+			else if (currentMap.isEnemiesLost) result = Result.Win;
 		}
 
 		/// <summary>

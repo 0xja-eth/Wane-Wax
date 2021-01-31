@@ -38,6 +38,22 @@ namespace DebugerModule.Data {
 		protected override float fallY => -base.fallY;
 
 		/// <summary>
+		/// 更新
+		/// </summary>
+		protected override void updateOthers() {
+			base.updateOthers();
+			updateScore();
+		}
+
+		/// <summary>
+		/// 更新积分
+		/// </summary>
+		void updateScore() {
+			var deltaHP = this.deltaHP;
+			if (deltaHP != null && deltaHP.value < 0) debugSer.score += 1;
+		}
+
+		/// <summary>
 		/// 初始化
 		/// </summary>
 		public RuntimeEnemy() { }

@@ -25,7 +25,23 @@ namespace DebugerModule.Data {
 		/// </summary>
 		public override Vector2 initPos => new Vector2(mapX / 2, mapY / 2);
 		public override bool initDir => true;
-		
+
+		/// <summary>
+		/// 更新
+		/// </summary>
+		protected override void updateOthers() {
+			base.updateOthers();
+			updateScore();
+		}
+
+		/// <summary>
+		/// 更新积分
+		/// </summary>
+		void updateScore() {
+			var deltaHP = this.deltaHP;
+			if (deltaHP != null && deltaHP.value < 0) debugSer.score -= 1;
+		}
+
 		/// <summary>
 		/// 初始化
 		/// </summary>

@@ -10,6 +10,8 @@ using BattleModule.Data;
 
 namespace DebugerModule.Data {
 
+	using Services;
+
 	/// <summary>
 	/// 战斗者
 	/// </summary>
@@ -36,7 +38,12 @@ namespace DebugerModule.Data {
 		[AutoConvert]
 		public float frequency { get; protected set; } = 0f; // 移动频率 s/次
 		[AutoConvert]
-		public float speed { get; protected set; } = 2f; // 移动速度 m/s
+		public float speed { get; protected set; } = 1f; // 移动速度 m/s
+
+		[AutoConvert]
+		public double hurtRate { get; protected set; } = 4; // 伤害速度 点/s
+		[AutoConvert]
+		public double recoveryRate { get; protected set; } = 1; // 恢复速度 点/s
 
 		/// <summary>
 		/// 地图尺寸
@@ -85,6 +92,11 @@ namespace DebugerModule.Data {
 		/// 所在地图
 		/// </summary>
 		public Map map { get; set; }
+
+		/// <summary>
+		/// 服务
+		/// </summary>
+		protected DebugerService debugSer => DebugerService.Get();
 
 		/// <summary>
 		/// 计时器
@@ -210,10 +222,32 @@ namespace DebugerModule.Data {
 		#region 更新
 
 		/// <summary>
+		/// 更新其他
+		/// </summary>
+		protected override void updateOthers() {
+			base.updateOthers(); updateSpeed();
+		}
+
+		/// <summary>
+		/// 添加速度
+		/// </summary>
+		void updateSpeed() {
+			if (speed <= 4) speed += 0.001f;
+		}
+
+		/// <summary>
 		/// 更新任意状态
 		/// </summary>
 		protected override void updateAnyState() {
 			base.updateAnyState();
+			var dt = Time.deltaTime;
+
+			if (!map.isValidCoord(x, y)) addHPByValue(-9999);
+
+			if (map.judgeBelong(x, y, belong))
+				addHPByValue(recoveryRate * dt);
+			else
+				addHPByValue(-hurtRate * dt);
 		}
 
 		/// <summary>

@@ -228,6 +228,17 @@ namespace DebugerModule.Data {
 		}
 
 		/// <summary>
+		/// 判断格子的归属
+		/// </summary>
+		/// <param name="x"></param>
+		/// <param name="y"></param>
+		/// <param name="belong"></param>
+		/// <returns></returns>
+		public bool judgeBelong(int x, int y, Grid.Belong belong) {
+			return getGrid(x, y)?.belong == belong;
+		}
+
+		/// <summary>
 		/// 获取坠落高度
 		/// </summary>
 		/// <returns></returns>
@@ -410,6 +421,12 @@ namespace DebugerModule.Data {
 		public void addEnemy() {
 			enemies.Add(new RuntimeEnemy(this));
 		}
+
+		/// <summary>
+		/// 结局
+		/// </summary>
+		public bool isActorLost => actor.isLost();
+		public bool isEnemiesLost => enemies.TrueForAll(e => e.isLost());
 
 		#endregion
 
