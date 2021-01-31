@@ -41,7 +41,7 @@ namespace DebugerModule.Data {
 		public float speed { get; protected set; } = 1f; // 移动速度 m/s
 
 		[AutoConvert]
-		public double hurtRate { get; protected set; } = 4; // 伤害速度 点/s
+		public double hurtRate { get; protected set; } = 5; // 伤害速度 点/s
 		[AutoConvert]
 		public double recoveryRate { get; protected set; } = 1; // 恢复速度 点/s
 
@@ -244,7 +244,7 @@ namespace DebugerModule.Data {
 
 			if (!map.isValidCoord(x, y)) addHPByValue(-9999);
 
-			if (map.judgeBelong(x, y, belong))
+			if (map.judgePosBelong(x, y, belong))
 				addHPByValue(recoveryRate * dt);
 			else
 				addHPByValue(-hurtRate * dt);
@@ -324,6 +324,13 @@ namespace DebugerModule.Data {
 		/// </summary>
 		protected override void _updateHitting() {
 
+		}
+
+		/// <summary>
+		/// 死亡回调
+		/// </summary>
+		protected override void _onDie() {
+			changeState(State.Dead);
 		}
 
 		/// <summary>

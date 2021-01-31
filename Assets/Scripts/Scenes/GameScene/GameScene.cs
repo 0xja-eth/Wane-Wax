@@ -22,8 +22,13 @@ namespace Scenes.GameScene {
 		/// 外部组件设置
 		/// </summary>
 		public MapDisplay mapDisplay;
-		public ScoreDisplay scoreDisplay;
+		public ScoreDisplay scoreDisplay, winScore, loseScore;
 		public LifeDisplay playerLife, enemyLife;
+
+		public GameObject pauseLayer;
+
+		public Animation winResult, loseResult;
+		public Animation cameraAni;
 
 		/// <summary>
 		/// 服务
@@ -50,8 +55,8 @@ namespace Scenes.GameScene {
 		/// </summary>
 		protected override void update() {
 			base.update();
-			//if (!debugSer.pause || debugSer.isResult)
-			debugSer.update();
+			if (!debugSer.pause && !debugSer.isResult)
+				debugSer.update();
 
 			updateResult(); updateUI();
 		}
@@ -72,22 +77,46 @@ namespace Scenes.GameScene {
 		/// 更新结果
 		/// </summary>
 		void updateResult() {
-			if (debugSer.isWin) onWin();
-			if (debugSer.isLose) onLose();
+			if (debugSer.isWin) updateWin();
+			if (debugSer.isLose) updateLose();
 		}
+
+		string resultAni = "ResultAni";
+		string rotateAni = "RotateAni";
+
+		bool rotateFlag = false; // 静态
+		bool resultFlag = false; // 静态
 
 		/// <summary>
 		/// 胜利
 		/// </summary>
-		void onWin() {
-			Debug.Log("Win");
+		void updateWin() {
+			if (resultFlag) return;
+
+			winScore.setValue(debugSer.score);
+
+			winResult.gameObject.SetActive(true);
+			winResult.Play(resultAni);
+
+			resultFlag = true;
 		}
 
 		/// <summary>
 		/// 失败
 		/// </summary>
-		void onLose() {
-			Debug.Log("Lost");
+		void updateLose() {
+			if (resultFlag) return;
+
+			loseScore.setValue(debugSer.score);
+
+			if (cameraAni.IsPlaying(rotateAni)) return;
+			if (rotateFlag) {
+				resultFlag = true;
+				loseResult.gameObject.SetActive(true);
+				loseResult.Play(resultAni);
+			} else {
+				rotateFlag = true; cameraAni.Play(rotateAni);
+			}
 		}
 
 		/// <summary>
@@ -95,6 +124,7 @@ namespace Scenes.GameScene {
 		/// </summary>
 		public void togglePause() {
 			debugSer.pause = !debugSer.pause;
+			pauseLayer.SetActive(debugSer.pause);
 		}
 	}
 }

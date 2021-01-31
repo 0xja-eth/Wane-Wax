@@ -169,7 +169,7 @@ namespace DebugerModule.Services {
 		/// 添加速度
 		/// </summary>
 		void updateSpeed() {
-			if (aiSpeed > 1) aiSpeed -= 0.001f;
+			if (aiSpeed > 0.75f) aiSpeed -= 0.003f;
 			if (clearSpeed > 3) clearSpeed -= 0.001f;
 		}
 
@@ -178,6 +178,7 @@ namespace DebugerModule.Services {
 		/// </summary>
 		void updateScore() {
 			score += (int)Mathf.Round(1 / aiSpeed * 3);
+			score = Mathf.Max(score, 0);
 		}
 
 		/// <summary>
@@ -187,7 +188,10 @@ namespace DebugerModule.Services {
 			if (currentMap.isActorLost) result = Result.Lose;
 			else if (currentMap.isEnemiesLost) result = Result.Win;
 
-			if (isResult) changeState(State.Result);
+			if (isResult) {
+				currentMap.clearAll();
+				changeState(State.Result);
+			}
 		}
 
 		/// <summary>

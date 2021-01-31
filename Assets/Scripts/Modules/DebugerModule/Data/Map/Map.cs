@@ -234,8 +234,8 @@ namespace DebugerModule.Data {
 		/// <param name="y"></param>
 		/// <param name="belong"></param>
 		/// <returns></returns>
-		public bool judgeBelong(int x, int y, Grid.Belong belong) {
-			return getGrid(x, y)?.belong == belong;
+		public bool judgePosBelong(int x, int y, Grid.Belong belong) {
+			return getGrid(x, y)?.posBelong == belong;
 		}
 
 		/// <summary>
@@ -357,6 +357,23 @@ namespace DebugerModule.Data {
 
 				return 1;
 			}
+		}
+
+		/// <summary>
+		/// 清除所有方块
+		/// </summary>
+		public void clearAll() {
+			for (int y = 0; y < mapY; ++y)
+				for (int x = 0; x < mapX; ++x) {
+					var grid = getGrid(x, y);
+					var belong = (y >= mapY >> 1) ?
+						Grid.Belong.Player : Grid.Belong.Enemy;
+
+					grid.changeBelong(belong);
+					grid.changeType(Grid.Type.Normal);
+					grid.preview = false;
+				}
+			_refreshRequest = true;
 		}
 
 		/// <summary>

@@ -39,7 +39,7 @@ namespace DebugerModule.Data {
 		/// </summary>
 		void updateScore() {
 			var deltaHP = this.deltaHP;
-			if (deltaHP != null && deltaHP.value < 0) debugSer.score -= 1;
+			if (deltaHP != null && deltaHP.value < 0) debugSer.score -= 10;
 		}
 
 		/// <summary>

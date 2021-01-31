@@ -34,9 +34,13 @@ namespace DebugerModule.Controls {
 		/// <param name="data"></param>
 		protected override void drawExactlyValue(RuntimeBattler data) {
 			base.drawExactlyValue(data);
-			var rate = data.mhp / data.hp;
+
+			var rate = data.hp / data.mhp;
 			var index = (int)(rate * maxLife);
-			var alpha = (float)(rate - (index / maxLife)) * maxLife;
+			var alpha = (float)(rate - (index * 1f / maxLife)) * maxLife;
+
+			debugLog("HP: " + data.hp + "/" + data.mhp + " (" + rate + "%)");
+			debugLog("HP index, alpha: " + index + ", " + alpha);
 
 			for (int i = 0; i < maxLife; ++i) {
 				var a = 1f;

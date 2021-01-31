@@ -68,3 +68,5 @@ DownloadedAssets.meta
 
 # Deploy configure
 DeployConfig.cs
+
+*.zip

@@ -342,6 +342,8 @@ namespace BattleModule.Data {
 				maxParams[i] = defaultMaxParam(i);
 				minParams[i] = defaultMinParam(i);
 			}
+
+			hp = mhp;
 		}
 
 		#endregion
