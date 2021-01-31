@@ -38,8 +38,7 @@ namespace DebugerModule.Data {
 		/// 更新积分
 		/// </summary>
 		void updateScore() {
-			var deltaHP = this.deltaHP;
-			if (deltaHP != null && deltaHP.value < 0) debugSer.score -= 10;
+			if (!map.judgePosBelong(x, y, belong)) debugSer.score -= 10;
 		}
 
 		/// <summary>

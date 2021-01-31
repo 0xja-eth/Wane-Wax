@@ -249,10 +249,10 @@ namespace DebugerModule.Data {
 
 			if (!map.isValidCoord(x, y)) addHPByValue(-9999);
 
-			if (map.judgePosBelong(x, y, belong))
-				addHPByValue(recoveryRate * dt);
-			else
-				addHPByValue(-hurtRate * dt);
+			//if (map.judgePosBelong(x, y, belong))
+			//	addHPByValue(recoveryRate * dt);
+			//else
+			//	addHPByValue(-hurtRate * dt);
 		}
 
 		/// <summary>

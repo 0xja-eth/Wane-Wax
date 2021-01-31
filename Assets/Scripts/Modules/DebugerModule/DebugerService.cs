@@ -210,7 +210,7 @@ namespace DebugerModule.Services {
 		void updateSpeed() {
 			if (aiSpeed > 0.25f) aiSpeed -= 0.002f;
 			if (clearSpeed > 5) clearSpeed -= 0.002f;
-			if (fallSpeed > 1) fallSpeed -= 0.002f;
+			if (fallSpeed > 0.25f) fallSpeed -= 0.002f;
 		}
 
 		/// <summary>
@@ -336,7 +336,7 @@ namespace DebugerModule.Services {
 		/// </summary>
 		float freezeTime = 0;
 		float freezeTime2 = 0;
-		public float freezeDuration = 2.5f;
+		public float freezeDuration = 2f;
 
 		/// <summary>
 		/// 更新输入
@@ -352,7 +352,7 @@ namespace DebugerModule.Services {
 			}
 
 			bool left = InputUtils.getKeyDown(KeyCode.LeftArrow, KeyCode.A);
-			bool right = InputUtils.getKeyDown(KeyCode.RightArrow, KeyCode.R);
+			bool right = InputUtils.getKeyDown(KeyCode.RightArrow, KeyCode.D);
 
 			if (right) fallingX++; if (left) fallingX--;
 			//if (right || left) freezeTime = 0;

@@ -282,9 +282,14 @@ namespace DebugerModule.Data {
 		/// <param name="belong"></param>
 		/// <returns></returns>
 		public int findThrough(int x, bool direction, Grid.Belong belong) {
-			for(int xx = x; xx != x; xx = forward(xx, direction)) {
-				var grid = getGrid(x, mapY - 1);
+			int cnt = 0;
+			for(int xx = x; cnt < 10; xx = forward(xx, direction)) {
+				var y = belong == Grid.Belong.Player ?
+					(mapY / 2 - 2) : (mapY / 2 + 1);
+
+				var grid = getGrid(x, y);
 				if (grid.belong == belong) return xx;
+				cnt++;
 			}
 			return -1;
 		}
