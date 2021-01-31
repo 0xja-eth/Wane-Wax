@@ -97,7 +97,7 @@ namespace BattleModule.Data {
 			_deltaHP = _deltaHP ?? new DeltaHP();
 			_deltaHP.value += value;
 
-			Debug.Log("setHPChange: " + value + ", sum: " + _deltaHP.value);
+			//Debug.Log("setHPChange: " + value + ", sum: " + _deltaHP.value);
 		}
 
 		#endregion

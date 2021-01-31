@@ -5,6 +5,7 @@ using UnityEngine;
 using Random = UnityEngine.Random;
 
 using Core.Services;
+using Core.Utils;
 
 namespace DebugerModule.Services {
 
@@ -100,6 +101,8 @@ namespace DebugerModule.Services {
 			currentGrids = nextGrids ?? generateGrids();
 			nextGrids = generateGrids();
 
+			fallingY = currentMap.mapY - 1;
+
 			changeState(State.Placing);
 		}
 
@@ -121,7 +124,18 @@ namespace DebugerModule.Services {
 		public void placeGrids(RuntimeGrids grids, int x, bool preview = false) {
 			currentMap.placeGrids(grids, x, preview);
 
+			if (!preview) _isPlaced = true;
+
 			if (grids.isPlayer && !preview) changeState(State.Placed);
+			if (grids.isEnemy && !preview) enemyGrids = null;
+		}
+		public void placeGrids(RuntimeGrids grids, int x, int y, bool preview = false) {
+			currentMap.placeGrids(grids, x, y, preview);
+
+			if (!preview) _isPlaced = true;
+
+			if (grids.isPlayer && !preview) changeState(State.Placed);
+			if (grids.isEnemy && !preview) enemyGrids = null;
 		}
 
 		#endregion
@@ -148,6 +162,18 @@ namespace DebugerModule.Services {
 		#region 更新
 
 		/// <summary>
+		/// 放置方块
+		/// </summary>
+		bool _isPlaced = false;
+		public bool isPlaced {
+			get {
+				var res = _isPlaced;
+				_isPlaced = false;
+				return res;
+			}
+		}
+
+		/// <summary>
 		/// 更新
 		/// </summary>
 		protected override void updateOthers() {
@@ -169,8 +195,9 @@ namespace DebugerModule.Services {
 		/// 添加速度
 		/// </summary>
 		void updateSpeed() {
-			if (aiSpeed > 0.75f) aiSpeed -= 0.003f;
-			if (clearSpeed > 3) clearSpeed -= 0.001f;
+			if (aiSpeed > 0.1f) aiSpeed -= 0.001f;
+			if (clearSpeed > 3) clearSpeed -= 0.002f;
+			if (fallSpeed > 0.5f) fallSpeed -= 0.002f;
 		}
 
 		/// <summary>
@@ -203,7 +230,7 @@ namespace DebugerModule.Services {
 
 		// TODO: 封装 AI 模块
 		float placeTime = 0;
-		public float aiSpeed { get; protected set; } = 3; // 放置速度 s/个
+		public float aiSpeed { get; protected set; } = 1; // 放置速度 s/个
 
 		float clearTime = 0;
 		public float clearSpeed { get; protected set; } = 7; // 清除速度 s/个
@@ -212,16 +239,35 @@ namespace DebugerModule.Services {
 		/// 更新敌人
 		/// </summary>
 		void updateEnemy() {
-			if (enemyGrids == null) enemyGrids = generateGrids(Grid.Belong.Enemy);
-
-			placeGrids(enemyGrids, currentMap.actor.x, true);
+			if (enemyGrids == null) {
+				enemyGrids = generateGrids(Grid.Belong.Enemy);
+				fallingY2 = 0;
+			}
 
 			placeTime += Time.deltaTime;
 			if (placeTime >= aiSpeed) {
-				placeGrids(enemyGrids, currentMap.actor.x);
-				enemyGrids = null;
+				var targetX = currentMap.actor.nextX;
+				var dist = targetX - fallingX2;
+
+				if (dist > 0) fallingX2++;
+				else fallingX2--;
+
+				var w = currentMap.mapX;
+				fallingX2 = (w + fallingX2) % w;
+
 				placeTime = 0;
+
+				if (fallingX2 == targetX)
+					placeGrids(enemyGrids, fallingX2);
 			}
+
+			if (enemyGrids == null) return;
+			//var down = InputUtils.getKeyDown(KeyCode.DownArrow, KeyCode.S);
+			//if (down) placeGrids(enemyGrids, fallingX2);
+			if (!currentMap.isPlacePointValid(enemyGrids, fallingX2, fallingY2 + 1))
+				placeGrids(enemyGrids, fallingX2, fallingY2);
+			else
+				placeGrids(enemyGrids, fallingX2, fallingY2, true);
 		}
 
 		/// <summary>
@@ -239,19 +285,52 @@ namespace DebugerModule.Services {
 			}
 		}
 
+		int fallingX, fallingY;
+		int fallingX2, fallingY2;
+
 		/// <summary>
 		/// 更新输入
 		/// </summary>
 		void updateInputting() {
-			if (Input.GetKeyDown(KeyCode.Mouse1)) currentGrids.rotate();
+			var hor = Input.GetAxisRaw("Horizontal");
+			//var ver = Input.GetAxisRaw("Vertical");
+			var down = InputUtils.getKeyDown(KeyCode.DownArrow, KeyCode.S);
+			var rotate = InputUtils.getKeyDown(KeyCode.UpArrow, KeyCode.W, KeyCode.Space);
 
-			placeGrids(currentGrids, (int)mousePos.x, !Input.GetKeyDown(KeyCode.Mouse0));
+			if (hor > 0) fallingX++; if (hor < 0) fallingX--;
+
+			var w = currentMap.mapX; fallingX = (w + fallingX) % w;
+
+			if (rotate) currentGrids.rotate();
+			if (down) placeGrids(currentGrids, fallingX);
+			else if (!currentMap.isPlacePointValid(currentGrids, fallingX, fallingY - 1))
+				placeGrids(currentGrids, fallingX, fallingY);
+			else
+				placeGrids(currentGrids, fallingX, fallingY, true);
+		}
+
+		/// <summary>
+		/// 降落
+		/// </summary>
+		float fallTime = 0;
+		public float fallSpeed { get; protected set; } = 1.5f; // 放置速度 s/格
+
+		/// <summary>
+		/// 更新降落
+		/// </summary>
+		void updateFalling() {
+			fallTime += Time.deltaTime;
+			if (fallTime >= fallSpeed) {
+				fallTime = 0; fallingY--; fallingY2++;
+			}
 		}
 
 		/// <summary>
 		/// 更新游戏开始
 		/// </summary>
 		void _updateStart() {
+			fallingX = fallingX2 = currentMap.actor.x;
+
 			generateNextGrids();
 		}
 
@@ -260,6 +339,7 @@ namespace DebugerModule.Services {
 		/// </summary>
 		void _updatePlacing() {
 			updateInputting();
+			updateFalling();
 		}
 
 		/// <summary>

@@ -30,6 +30,8 @@ namespace Scenes.GameScene {
 		public Animation winResult, loseResult;
 		public Animation cameraAni;
 
+		public AudioSource placedSE;
+
 		/// <summary>
 		/// 服务
 		/// </summary>
@@ -58,7 +60,18 @@ namespace Scenes.GameScene {
 			if (!debugSer.pause && !debugSer.isResult)
 				debugSer.update();
 
-			updateResult(); updateUI();
+			if (Input.GetKeyDown(KeyCode.R))
+				sceneSys.changeScene(SceneConfig.Type.GameScene, true);
+
+			updateSE(); updateUI();
+			updateResult();
+		}
+
+		/// <summary>
+		/// 更新音效
+		/// </summary>
+		void updateSE() {
+			if (debugSer.isPlaced) placedSE.Play();
 		}
 
 		/// <summary>

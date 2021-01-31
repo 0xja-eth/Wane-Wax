@@ -134,6 +134,31 @@ namespace DebugerModule.Data {
 				}
 			}
 		}
+		public bool placeGrids(RuntimeGrids grids, int x, int y, bool preview = false) {
+			if (!isPlacePointValid(grids, x, y)) return false;
+
+			var pp = new Vector2(x, y);
+
+			var rGrid = grids.rootGrid;
+			var offsetX = (int)pp.x - rGrid.x;
+			var offsetY = (int)pp.y - rGrid.y;
+
+			// 遍历每个方块
+			foreach (var grid in grids.realGrids) {
+				var rx = grid.x + offsetX; // 实际地图坐标
+				var ry = grid.y + offsetY;
+
+				if (preview)
+					previewPos.Add(new Vector2(rx, ry));
+				else {
+					changeGrid(rx, ry, grids.belong);
+					changeGrid(rx, ry, newGridType());
+					_refreshRequest = true;
+				}
+			}
+
+			return true;
+		}
 
 		/// <summary>
 		/// 计算新格子的类型
@@ -177,7 +202,7 @@ namespace DebugerModule.Data {
 		/// <param name="x"></param>
 		/// <param name="y"></param>
 		/// <returns></returns>
-		bool isPlacePointValid(RuntimeGrids grids, int x, int y) {
+		public bool isPlacePointValid(RuntimeGrids grids, int x, int y) {
 			var rGrid = grids.rootGrid;
 			var offsetX = x - rGrid.x;
 			var offsetY = y - rGrid.y;

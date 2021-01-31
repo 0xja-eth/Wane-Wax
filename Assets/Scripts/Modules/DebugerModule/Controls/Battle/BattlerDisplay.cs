@@ -10,6 +10,7 @@ using ExerComps.Controls.ItemDisplays;
 namespace DebugerModule.Controls {
 
 	using Data;
+	using Services;
 
 	/// <summary>
 	/// 地图显示
@@ -65,6 +66,11 @@ namespace DebugerModule.Controls {
 		/// </summary>
 		RuntimeBattler lastItem;
 
+		/// <summary>
+		/// 服务
+		/// </summary>
+		DebugerService debugSer;
+
 		#region 更新
 
 		/// <summary>
@@ -73,6 +79,8 @@ namespace DebugerModule.Controls {
 		protected override void update() {
 			base.update();
 			if (item == null) return;
+
+			if (debugSer.isResult) deactivate();
 
 			updateState();
 			updateDirection();

@@ -47,7 +47,7 @@ namespace Core {
 		/// <returns></returns>
 		public static bool isStarted(Type scene) {
 			// 默认开始标志为连接状态
-			return NetworkSystem.Get().isConnected();
+			return true; // NetworkSystem.Get().isConnected();
 		}
 
 	}
