@@ -1,5 +1,6 @@
 ﻿
 using UnityEngine;
+using UnityEngine.UI;
 
 using Core;
 
@@ -24,6 +25,8 @@ namespace Scenes.GameScene {
 		public MapDisplay mapDisplay;
 		public ScoreDisplay scoreDisplay, winScore, loseScore;
 		public LifeDisplay playerLife, enemyLife;
+
+		public Text sinkTimer;
 
 		public GameObject pauseLayer;
 
@@ -79,6 +82,9 @@ namespace Scenes.GameScene {
 		/// </summary>
 		void updateUI() {
 			if (currentMap == null) return;
+
+			var time = debugSer.clearSpeed - debugSer.clearTime;
+			sinkTimer.text = "Sink: " + (int)time + "S";
 
 			scoreDisplay.score.text = debugSer.score.ToString();
 

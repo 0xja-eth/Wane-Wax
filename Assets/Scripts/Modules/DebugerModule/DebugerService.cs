@@ -243,9 +243,9 @@ namespace DebugerModule.Services {
 		float aiTime = 0;
 		public float aiSpeed { get; protected set; } // 放置速度 s/个
 
-		float clearTime = 0;
+		public float clearTime = 0;
 		public float clearSpeed { get; protected set; } // 清除速度 s/个
-
+		
 		/// <summary>
 		/// 更新敌人
 		/// </summary>
@@ -303,14 +303,21 @@ namespace DebugerModule.Services {
 		/// 更新输入
 		/// </summary>
 		void updateInputting() {
-			var hor = Input.GetAxisRaw("Horizontal");
-			//var ver = Input.GetAxisRaw("Vertical");
-			var down = InputUtils.getKeyDown(KeyCode.DownArrow, KeyCode.S);
-			var rotate = InputUtils.getKeyDown(KeyCode.UpArrow, KeyCode.W, KeyCode.Space);
+			//freezeTime += Time.deltaTime;
+			//if (freezeTime >= freezeDuration) {
 
-			if (hor > 0) fallingX++; if (hor < 0) fallingX--;
+			//	//var ver = Input.GetAxisRaw("Vertical");
+			//}
+			bool left = InputUtils.getKeyDown(KeyCode.LeftArrow, KeyCode.A);
+			bool right = InputUtils.getKeyDown(KeyCode.RightArrow, KeyCode.R);
+
+			if (right) fallingX++; if (left) fallingX--;
+			//if (right || left) freezeTime = 0;
 
 			var w = currentMap.mapX; fallingX = (w + fallingX) % w;
+
+			var down = InputUtils.getKeyDown(KeyCode.DownArrow, KeyCode.S);
+			var rotate = InputUtils.getKeyDown(KeyCode.UpArrow, KeyCode.W, KeyCode.Space);
 
 			if (rotate) currentGrids.rotate();
 			if (down) placeGrids(currentGrids, fallingX);
